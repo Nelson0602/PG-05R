@@ -1,14 +1,17 @@
 package model.queue;
 
 import model.Node;
+/*
+//esta es la implementacion del TDA cola utilizando un nodo cabecera vacio
+ */
 
-public class LinkedQueue<T> implements MyQueue<T> {
+public class HeaderLinkedQueue<T> implements MyQueue<T> {
     private Node<T> front; //anterior o frente de la cola
     private Node<T> rear; //posterior o final de la cola
     private int size; //control de elementos encolados
 
-    public LinkedQueue() {
-        front = rear = null;
+    public HeaderLinkedQueue() {
+        front = rear = new Node<T>();
         size = 0;
     }
 
@@ -25,14 +28,13 @@ public class LinkedQueue<T> implements MyQueue<T> {
 
     @Override
     public boolean isEmpty() {
-        return front == null;
+        return front == rear;
     }
 
     @Override
     public int indexOf(T element) throws QueueException {
-
-        if (isEmpty()) throw new QueueException("Linked Queue is empty");
-        LinkedQueue<T> aux = new LinkedQueue<>();
+        if (isEmpty()) new  QueueException("Array Queue is empty");
+        HeaderLinkedQueue<T> aux= new HeaderLinkedQueue<>();
         int index=1;
         int pos = -1;
         while (!isEmpty()) {
@@ -51,24 +53,21 @@ public class LinkedQueue<T> implements MyQueue<T> {
     @Override
     public void enQueue(T element) throws QueueException {
         Node<T> node = new Node<>(element);
-        if (isEmpty()) front = rear = node;
-        else {
-            rear.next = node;
-            rear = node;
-        }
+        rear.next = node;
+        rear = node;
         size++;
     }
 
     @Override
     public T deQueue() throws QueueException {
         if (isEmpty()) {
-            throw new QueueException("Linked Queue is empty");
+            throw new QueueException("Array Queue is empty");
         }
-        T element = front.data;
+        T element = front.next.data;
         //caso 1:solo hay un elemento
-        if (front == rear) clear();
+        if (front.next == rear) clear();
         else {//caso 2: hay mas de un elemento
-            front = front.next;
+            front.next = front.next.next;
 
         }
         size--;
@@ -77,65 +76,53 @@ public class LinkedQueue<T> implements MyQueue<T> {
 
     @Override
     public void enQueue(T element, Integer priority) throws QueueException {
-        Node<T> newNode = new Node<>(element, priority);
-        if (isEmpty()) {
-            front = rear = newNode;
-        } else if (priority < front.priority) {
-            newNode.next = front;
-            front = newNode;
-        } else {
-            Node<T> aux = front;
-            while (aux.next != null && aux.next.priority <= priority) {
-                aux = aux.next;
-            }
-            newNode.next = aux.next;
-            aux.next = newNode;
-            if (newNode.next == null) rear = newNode;
-        }
-        size++;
+
     }
 
     @Override
     public boolean contains(T element) throws QueueException {
-        if (isEmpty()) throw new QueueException("Linked Queue is empty");
-        LinkedQueue<T> aux = new LinkedQueue<>();
-        boolean found = false;
-        while (!isEmpty()) {
-            if (equals(front(), element)) {
-                found = true;
+        if (isEmpty()) new  QueueException("Array Queue is empty");
+        HeaderLinkedQueue<T> aux= new HeaderLinkedQueue<>();
+        boolean finded= false;
+        while (!finded) {
+            if (equals(front(), element)){
+                finded = true;
             }
             aux.enQueue(deQueue());
         }
-        while (!aux.isEmpty())
+        while (!finded)
             enQueue(aux.deQueue());
-
-        return found;
+        //al final dejamos el tda colaen en su estado original
+        return finded;
     }
 
     @Override
     public T peek() throws QueueException {
         if (isEmpty()) {
-            throw new QueueException("Linked Queue is empty");
+            throw new QueueException("Header Array Queue is empty");
+        }
+        return front.next.data;
+    }
+
+    @Override
+    public T front() throws QueueException {
+        if (isEmpty()) {
+            throw new QueueException("Header Array Queue is empty");
         }
         return front.data;
     }
 
     @Override
-    public T front() throws QueueException {
-        return peek();
-    }
-
-    @Override
     public String toString() {
-        if (isEmpty()) return "Linked Queue is empty";
-        StringBuilder sb = new StringBuilder("FRONT -> ");
-        LinkedQueue<T> auxQueue = new LinkedQueue<>();
+        if (isEmpty()) return "Header Arrat Queue is empty";
+        StringBuilder sb = new StringBuilder("FRONT -> [] → ");
+        HeaderLinkedQueue<T> auxQueue = new HeaderLinkedQueue<>();
         try {
             while (!isEmpty()) {
 
                 sb.append("[").append(peek()).append("]");
                 auxQueue.enQueue(deQueue());
-                if (!isEmpty()) sb.append("-> ");
+                if (!isEmpty()) sb.append(" -> ");
             }
             while ((!auxQueue.isEmpty())) {
                 enQueue((auxQueue.deQueue()));
@@ -146,7 +133,9 @@ public class LinkedQueue<T> implements MyQueue<T> {
         sb.append(" → REAR");
         return sb.toString();
     }
+
     private boolean equals(T a, T b) {
         return a == null ? b == null : a.equals(b);
     }
+
 }

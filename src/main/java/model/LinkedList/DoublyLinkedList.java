@@ -20,6 +20,49 @@ public class DoublyLinkedList<T> implements List<T> {
         return count;
     }
 
+
+
+    public void addAtPosK(T data, int k) {
+        Node<T> node = new Node<>(data);
+
+        if (isEmpty()) {
+            head = node;
+            tail = node;
+            return;
+
+        }
+
+
+        if (k <= 1) {
+            node.next = head;
+            head.prev = node;
+            head = node;
+            return;
+        }
+
+
+        Node<T> aux = head;
+        int count = 1;
+
+        while (aux.next != null && count < k - 1) {
+            aux = aux.next;
+            count++;
+        }
+
+        if (aux.next == null) {
+            aux.next = node;
+            node.prev = aux;
+            tail = node;
+        }
+
+        else {
+            node.next = aux.next;
+            node.prev = aux;
+            aux.next.prev = node;
+            aux.next = node;
+        }
+    }
+
     @Override
     public void clear() {
         head = null;

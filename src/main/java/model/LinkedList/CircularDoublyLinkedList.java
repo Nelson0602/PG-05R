@@ -10,19 +10,13 @@ public class CircularDoublyLinkedList<T> implements List<T>, Cloneable {
     private Node<T> head; //inicio de la lista
     private Node<T> tail; //cola o final de la lista
 
-
     public CircularDoublyLinkedList() {
         this.head = this.tail = null;
     }
 
-
     /** Devuelve el nodo HEAD (puede ser null). */
     public Node<T> getHead() {
         return head;
-    }
-
-    public Node<Integer> getHead2() {
-        return (Node<Integer>) head;
     }
 
     /** Devuelve el nodo TAIL (ult de la lista) (puede ser null). */
@@ -33,16 +27,15 @@ public class CircularDoublyLinkedList<T> implements List<T>, Cloneable {
     @Override
     public int size() throws ListException {
         if(isEmpty()){
-            throw new ListException("Circular Doubly Linked List is empty");
+            return 0;
         }
         Node<T> aux = head;
         int count=0;
-        while(aux!=tail){
+        do{
             count++;
-            aux = aux.next; //lo movemos al sgte nodo
-        }
-        return count+1; //+1 para que cuente el últ nodo
-
+            aux = aux.next;
+        } while(aux != head);
+        return count;
     }
 
     @Override
@@ -56,8 +49,7 @@ public class CircularDoublyLinkedList<T> implements List<T>, Cloneable {
     }
 
     /**
-     * Busca el valor en la lista. O(n).
-     * Marca el nodo encontrado con FOUND, o el último con NOT_FOUND.
+     * Busca el valor en la lista.
      * @return true si encuentra el nodo, false en caso contrario
      */
     @Override
@@ -66,16 +58,13 @@ public class CircularDoublyLinkedList<T> implements List<T>, Cloneable {
             throw new ListException("Circular Doubly Linked List is empty");
         }
         Node<T> aux = head;
-        while(aux!=tail){
+        do{
             if(equals(aux.data, element)){
                 return true;
             }
-            aux = aux.next; //lo movemos al sgte nodo
-        }
-        //se sale cuando estamos en el últ nodo
-        //solo queda validar la data del últ nodo
-        return equals(tail.data, element);
-
+            aux = aux.next;
+        } while(aux != head);
+        return false;
     }
 
     @Override
@@ -83,27 +72,30 @@ public class CircularDoublyLinkedList<T> implements List<T>, Cloneable {
         Node<T> newNode = new Node<>(element);
         if(isEmpty()){
             head = tail = newNode;
+            tail.next = head;
+            head.prev = tail;
+            return;
         }
-        else{
-            tail.next = newNode;
-            tail = newNode;
-        }
-        //hago el enlace circular
+        tail.next = newNode;
+        newNode.prev = tail;
+        tail = newNode;
         tail.next = head;
-        //hago el doble enlace
         head.prev = tail;
-
     }
-
 
     @Override
     public void addFirst(T element) {
         Node<T> node = new Node<>(element);
+        if (isEmpty()) {
+            head = tail = node;
+            tail.next = head;
+            head.prev = tail;
+            return;
+        }
         node.next = head;
+        head.prev = node;
         head = node;
-        //hago el enlace circular
         tail.next = head;
-        //hago el doble enlace
         head.prev = tail;
     }
 
@@ -114,7 +106,26 @@ public class CircularDoublyLinkedList<T> implements List<T>, Cloneable {
 
     @Override
     public void addInSortedList(T element) {
-
+        Node<T> node = new Node<>(element);
+        if (isEmpty()) {
+            head = tail = node;
+            tail.next = head;
+            head.prev = tail;
+            return;
+        }
+        if (compare(element, head.data) <= 0) {
+            addFirst(element);
+            return;
+        }
+        Node<T> aux = head;
+        while (aux.next != head && compare(aux.next.data, element) < 0) {
+            aux = aux.next;
+        }
+        node.next = aux.next;
+        node.prev = aux;
+        aux.next.prev = node;
+        aux.next = node;
+        if (aux == tail) tail = node;
     }
 
     @Override
@@ -124,38 +135,21 @@ public class CircularDoublyLinkedList<T> implements List<T>, Cloneable {
         }
         //Caso 1. El elemento a suprimir es el primero
         if (equals(head.data, element)) {
-            head = head.next;
+            removeFirst();
+            return;
         }
         //Caso general. Elemento puede estar en medio o al final
-        else {
-            Node<T> prev = head; //anterior
-            while (prev != tail) {
-                if (equals(prev.next.data, element)) {
-                    Node<T> removed = prev.next;
-                    //desenlanza el nodo
-                    prev.next = removed.next;
-                    //mantengo el doble enlace
-                    removed.next.prev = prev;
-                    return; //rompe el bucle
-                }
-                prev = prev.next; //se mueve al sgte nodo
+        Node<T> prev = head; //anterior
+        while (prev.next != head) {
+            if (equals(prev.next.data, element)) {
+                Node<T> removed = prev.next;
+                //desenlanza el nodo
+                prev.next = removed.next;
+                removed.next.prev = prev;
+                if (removed == tail) tail = prev;
+                return; //rompe el bucle
             }
-        }
-
-        //q pasa si solo queda un nodo
-        //y es el q quiero eliminar
-        if(head==tail&&equals(tail.data, element)){
-            clear(); //anulo la lista
-            return; //se sale
-        }
-
-        //al final dejamos tail en el ult nodo
-        //si la lista queda vacía se asigna null
-        tail = head != null ? getNodeByIndex(indexOf(getLast())) : null;
-        //hago el enlace circular y doble
-        if (tail != null) {
-            tail.next = head;
-            head.prev = tail;
+            prev = prev.next; //se mueve al sgte nodo
         }
     }
 
@@ -165,16 +159,13 @@ public class CircularDoublyLinkedList<T> implements List<T>, Cloneable {
             throw new ListException("Circular Doubly Linked List is empty");
         }
         T first = head.data;
+        if (head == tail) {
+            clear();
+            return first;
+        }
         head = head.next;
-        //q pasa si solo queda un nodo
-        if(head==tail){
-            clear(); //anulo la lista
-        }
-        //hago el enlace circular y doble
-        if (tail != null) {
-            tail.next = head;
-            head.prev = tail;
-        }
+        head.prev = tail;
+        tail.next = head;
         return first;
     }
 
@@ -183,32 +174,34 @@ public class CircularDoublyLinkedList<T> implements List<T>, Cloneable {
         if (isEmpty()) {
             throw new ListException("Circular Doubly Linked List is empty");
         }
-        Node<T> prev = head; //anterior
-        Node<T> aux = head;
-        while (aux != tail) {
-            prev = aux; //el nodo anterior al aux
-            aux = aux.next; //se mueve al sgte nodo
+        T last = tail.data;
+        if (head == tail) {
+            clear();
+            return last;
         }
-        //se sale cuando aux está en el ult nodo y prev está en el nodo anterior
-        T last = aux.data;
-        prev.next = head; //lo enlazamos con el primer nodo
-        tail = prev; //ahora corresponde al ult nodo
-
-        //q pasa si solo queda un nodo
-        if(head==tail){
-            clear(); //anulo la lista
-        }
-        //hago el enlace circular y doble
-        if (tail != null) {
-            tail.next = head;
-            head.prev = tail;
-        }
+        tail = tail.prev;
+        tail.next = head;
+        head.prev = tail;
         return last;
     }
 
     @Override
     public void sort() throws ListException {
-
+        if (isEmpty() || head == tail) return;
+        boolean swapped;
+        do {
+            swapped = false;
+            Node<T> cur = head;
+            while (cur.next != head) {
+                if (compare(cur.data, cur.next.data) > 0) {
+                    T tmp = cur.data;
+                    cur.data = cur.next.data;
+                    cur.next.data = tmp;
+                    swapped = true;
+                }
+                cur = cur.next;
+            }
+        } while (swapped);
     }
 
     @Override
@@ -218,13 +211,13 @@ public class CircularDoublyLinkedList<T> implements List<T>, Cloneable {
         }
         Node<T> aux = head;
         int index=1;
-        while(aux!=null){
+        do{
             if(equals(aux.data, element)){
                 return index;
             }
             index++;
-            aux = aux.next; //lo movemos al sgte nodo
-        }
+            aux = aux.next;
+        } while(aux != head);
         return -1; //indica q el elemento no existe
     }
 
@@ -251,17 +244,16 @@ public class CircularDoublyLinkedList<T> implements List<T>, Cloneable {
             throw new ListException("Circular Doubly Linked List is empty");
         }
         if(equals(head.data, element)){
-            return tail.data; // (T) "It's the first, it has no previous"
+            return tail.data;
         }
         Node<T> aux = head;
-        while(aux!=tail){
+        do{
             if(equals(aux.next.data, element)){
                 return aux.data;
             }
             aux = aux.next;
-        }
-        return null; //(T)"Does not exist in single linked list"
-
+        } while(aux != head);
+        return null;
     }
 
     @Override
@@ -269,57 +261,64 @@ public class CircularDoublyLinkedList<T> implements List<T>, Cloneable {
         if(isEmpty()){
             throw new ListException("Circular Doubly Linked List is empty");
         }
-        Node<T> aux = head; //dejar un rastro
-        while(aux!=tail){
+        Node<T> aux = head;
+        do{
             if(equals(aux.data, element)){
                 return aux.next.data;
             }
-            aux = aux.next; //lo movemos al sgte nodo
-        }
-        //se sale del while cuando estamos en el últ nodo
-        return equals(tail.data, element) ? head.data : null;
+            aux = aux.next;
+        } while(aux != head);
+        return null;
     }
 
     @Override
     public T get(int index) throws ListException {
-        return getNodeByIndex(index).data;
+        Node<T> node = getNodeByIndex(index);
+        return node != null ? node.data : null;
     }
 
     public Node<T> getNodeByIndex(int index) throws ListException {
         if(isEmpty()){
             throw new ListException("Circular Doubly Linked List is empty");
         }
+        if (index <= 0) return null;
         Node<T> aux = head;
-        int i = 1; //posicion del primer nodo
-        while(aux!=tail){
-            if(index == i){
-                return aux;
-            }
+        int i = 1;
+        do{
+            if(index == i) return aux;
             i++;
-            aux = aux.next; //lo movemos al sgte nodo
-        }
-        return index==i ? aux : null; //analizamos si el índice corresponde al últ nodo
+            aux = aux.next;
+        } while(aux != head);
+        return null;
     }
 
     /** Representación texto para el log. */
     @Override
     public String toString() {
+        if (isEmpty()) return "HEAD ←→ HEAD";
         StringBuilder sb = new StringBuilder("HEAD ←→ ");
         Node<T> cur = head;
-        while (head!=null && cur != tail) {
+        do {
             sb.append("[").append(cur.data).append("]");
             if (cur.next != null) sb.append(" ←→ ");
             cur = cur.next;
-        }
-        if(tail!=null) //para evitar NullPointerException
-            sb.append("[").append(tail.data).append("]");
-        sb.append(" ←→ HEAD"); //termina en HEAD xq es una lista circular
+        } while (cur != head);
+        sb.append(" ←→ HEAD");
         return sb.toString();
     }
 
     private boolean equals(T a, T b) {
         if (a == null) return b == null;
         return a.equals(b);
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private int compare(T a, T b) {
+        if (a == null && b == null) return 0;
+        if (a == null) return -1;
+        if (b == null) return 1;
+        if (a instanceof Comparable) return ((Comparable) a).compareTo(b);
+        return a.toString().compareTo(b.toString());
     }
 
     //===========AYUDAS=========//

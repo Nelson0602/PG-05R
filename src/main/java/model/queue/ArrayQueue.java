@@ -28,6 +28,7 @@ public class ArrayQueue<T> implements MyQueue<T> {
     public void clear() {
 
         data = (T[]) new Object[n];//n=capacidad
+        priorityQueue = new Integer[n];
         rear = n - 1; //ultimo elemento de la cola
         front = rear;
     }
@@ -39,7 +40,23 @@ public class ArrayQueue<T> implements MyQueue<T> {
 
     @Override
     public int indexOf(T element) throws QueueException {
-        return 0;
+        if (isEmpty()) throw new QueueException("Array Queue is empty");
+        ArrayQueue<T> aux= new ArrayQueue<>(size());
+        int index=0;
+        int pos = -1;
+        while (!isEmpty()) {
+            if (equals(front(), element)){
+                pos = index;
+            }
+            aux.enQueue(deQueue());
+            index++;
+
+        }
+        while (!aux.isEmpty())
+            enQueue(aux.deQueue());
+        //al final dejamos el tda colaen en su estado original
+
+        return pos;
     }
 
     @Override
@@ -50,8 +67,10 @@ public class ArrayQueue<T> implements MyQueue<T> {
         //la primera vez cuando esta vacio no entra al for
         for (int i = front; i < rear; i++) {
             data[i] = data[i + 1];//mueve el elemento una pos a la izquierda
+            priorityQueue[i] = priorityQueue[i + 1];
         }
         data[rear] = element;
+        priorityQueue[rear] = 3; // prioridad por defecto baja
         front--;//la idea es que anterior que en un campo vacio
 
     }
@@ -66,27 +85,50 @@ public class ArrayQueue<T> implements MyQueue<T> {
 
     @Override
     public void enQueue(T element, Integer priority) throws QueueException {
-
+        if (size() == data.length) {
+            throw new QueueException("Array Queue is full");
+        }
+        if (priority == null) priority = 3;
+        if (priority < 1) priority = 1;
+        if (priority > 3) priority = 3;
+        // desplazamos datos y prioridades a la izquierda
+        for (int i = front; i < rear; i++) {
+            data[i] = data[i + 1];
+            priorityQueue[i] = priorityQueue[i + 1];
+        }
+        data[rear] = element;
+        priorityQueue[rear] = priority;
+        front--;
     }
 
     @Override
     public boolean contains(T element) throws QueueException {
-        return false;
+        if (isEmpty()) throw new QueueException("Array Queue is empty");
+        ArrayQueue<T> aux= new ArrayQueue<>(size());
+        boolean finded= false;
+        int index=1;
+        while (!isEmpty()) {
+            if (equals(front(), element)){
+                finded = true;
+            }
+            aux.enQueue(deQueue());
+        }
+        while (!aux.isEmpty())
+            enQueue(aux.deQueue());
+        //al final dejamos el tda colaen en su estado original
+
+        return finded;
     }
 
     @Override
     public T peek() throws QueueException {
-        if (size() == data.length) {
-            throw new QueueException("Array Queue is full");
-        }
+        if (isEmpty()) throw new QueueException("Array Queue is empty");
         return data[front + 1];
     }
 
     @Override
     public T front() throws QueueException {
-        if (size() == data.length) {
-            throw new QueueException("Array Queue is full");
-        }
+        if (isEmpty()) throw new QueueException("Array Queue is empty");
         return data[front + 1];
     }
 
@@ -110,5 +152,8 @@ public class ArrayQueue<T> implements MyQueue<T> {
         }
         sb.append(" → REAR");
         return sb.toString();
+    }
+    private boolean equals(T a, T b) {
+        return a == null ? b == null : a.equals(b);
     }
 }

@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.collections.FXCollections?>
-<?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
@@ -19,241 +17,80 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-<?import java.lang.String?>
-<?import javafx.scene.control.Slider?>
+<?import javafx.scene.layout.AnchorPane?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-            prefHeight="703.0" prefWidth="1031.0"
+            prefHeight="750.0" prefWidth="1250.0"
             stylesheets="@styles.css"
             xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="controller.MainController">
-    <top>
-        <VBox prefHeight="95.0" prefWidth="828.0" styleClass="header-bar" BorderPane.alignment="CENTER">
-            <children>
-                <HBox prefHeight="100.0" prefWidth="200.0" spacing="16.0">
-                    <children>
-                        <Label prefHeight="51.0" prefWidth="229.0" styleClass="header-badge" text="PG-03">
-                            <font><Font size="18.0" /></font>
-                        </Label>
-                        <VBox prefHeight="100.0" prefWidth="1013.0">
-                            <children>
-                                <Label prefHeight="35.0" prefWidth="514.0" styleClass="header-title" text="Tipos de Algoritmos y Listas Enlazadas(simples y dobles) en JavaFx">
-                                    <font><Font size="24.0" /></font>
-                                </Label>
-                                <Label styleClass="header-sub" text="IF-3001 Algoritmos y Estructuras de datos">
-                                    <font><Font size="24.0" /></font>
-                                </Label>
-                            </children>
-                        </VBox>
-                    </children>
-                </HBox>
-            </children>
-        </VBox>
-    </top>
+
     <center>
         <TabPane fx:id="mainTabs" prefHeight="200.0" prefWidth="200.0" styleClass="main-tabs" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
             <tabs>
-                <Tab text="Miller-Rabin">
+                <Tab text="Circular Linked List">
                     <content>
-                        <SplitPane dividerPositions="0.5615906886517944">
-                            <items>
-                                <VBox spacing="8.0" styleClass="panel">
-                                    <children>
-                                        <Label styleClass="panel-title" text="Miller-Rabin para enteros grandes. Solución con la técnica Algoritmos Probabilisticos" />
-                                        <Canvas fx:id="canvasBin" height="291.0" width="548.0" />
-                                        <Label styleClass="param-label" text="Lista de Big Integers que pasaron el test de Primalidad" />
-                                        <TableView fx:id="tableResults" prefHeight="256.0">
-                                            <columns>
-                                                <TableColumn fx:id="colNumber" prefWidth="270" text="Número" />
-                                                <TableColumn fx:id="colResult" prefWidth="270" text="Resultado" />
-                                            </columns>
-                                        </TableView>
-                                    </children>
-                                </VBox>
-                                <VBox spacing="10.0" styleClass="panel">
-                                    <children>
-                                        <Label styleClass="action-label" text="Parámetros" />
-                                        <Spinner fx:id="spParams" />
-                                        <HBox spacing="10.0">
-                                            <children>
-                                                <Label styleClass="param-label" text="Big Integer" />
-                                                <TextField fx:id="txfBigInteger" />
-                                                <Button fx:id="btnGenerateMR" styleClass="btn-primary" text="Generar Aleatorio" />
-                                                <Button fx:id="btnCleanField" styleClass="btn-accent" text="Limpiar campo" />
-                                            </children>
-                                        </HBox>
-                                        <HBox spacing="10.0">
-                                            <children>
-                                                <Button fx:id="btnMillerRabin" styleClass="btn-primary" text="Miller-Rabin" />
-                                                <Button fx:id="btnClean" styleClass="btn-ghost" text="Limpiar" />
-                                            </children>
-                                        </HBox>
-                                <Label styleClass="param-label" text="Registro de Operaciones" />
-                                <ListView fx:id="listViewOperations" prefHeight="155.0" />
-
-                                <VBox spacing="8.0" styleClass="info-box">
-                                    <children>
-                                        <Label styleClass="info-title" text="“Test de Primalidad” utilizando el algoritmo de Miller-Rabin" />
-                                        <TextArea editable="false" prefHeight="185.0" wrapText="true" styleClass="info-box"
-                                                  text="Algoritmo probabilístico eficiente utilizado para determinar si un número entero grande es primo o compuesto.&#10;A diferencia de los métodos deterministas, este test es muy rápido, lo que lo hace fundamental en criptografía, como en RSA, para generar números primos de gran tamaño en poco tiempo.&#10;&#10;Lista de Big Integers para pruebas:&#10;1000000007, 18446744073709551557, 1000000000000000003, 2305843009213693951" />
-                                    </children>
-                                    </VBox>
-                                    </children>
-                                </VBox>
-                            </items>
-                        </SplitPane>
-                    </content>
-                </Tab>
-
-                <Tab text="Random Search">
-                    <content>
-                        <SplitPane dividerPositions="0.5615906886517944">
-                            <items>
-                                <VBox spacing="8.0" styleClass="panel">
-                                    <children>
-                                        <Label styleClass="panel-title" text="Búsqueda aleatoria en un arreglo con un máximo de intentos permitidos" />
-                                        <TextField fx:id="lblArrayContext" editable="false" />
-                                        <Canvas fx:id="canvasRandomSearch" height="320.0" width="760.0" />
-                                        <Label fx:id="lblSearchStatus" style="-fx-text-fill: green; -fx-font-weight: bold;" text="VALOR ENCONTRADO" visible="false" />
-                                        <Label styleClass="param-label" text="Lista de elementos encontrados con el algoritmo Random Search" />
-
-                                        <TableView fx:id="tableRandomResults" prefHeight="210.0">
-                                            <columns>
-                                                <TableColumn fx:id="colRSValue" prefWidth="135.0" text="Valor" />
-                                                <TableColumn fx:id="colRSIndex" prefWidth="135.0" text="Indice" />
-                                                <TableColumn fx:id="colRSAttempts" prefWidth="135.0" text="Intentos registrados" />
-                                                <TableColumn fx:id="colRSMaxAttempts" prefWidth="135.0" text="Máximo de intentos" />
-                                            </columns>
-                                        </TableView>
-                                    </children>
-                                </VBox>
-
-                                <VBox spacing="10.0" styleClass="panel">
-                                    <children>
-                                        <Label styleClass="action-label" text="Parámetros" />
-
-                                        <Slider fx:id="sliderSearchRange"
-                                                min="0.0"
-                                                max="100.0"
-                                                value="20.0"
-                                                majorTickUnit="5.0"
-                                                minorTickCount="0"
-                                                showTickLabels="true"
-                                                showTickMarks="true"
-                                                snapToTicks="true" />
-
-                                        <HBox spacing="10.0">
-                                            <children>
-                                                <VBox>
-                                                    <children>
-                                                        <Label styleClass="param-label" text="Valor:" />
-                                                        <TextField fx:id="txfSearchValue" prefWidth="155.0" />
-                                                    </children>
-                                                </VBox>
-
-                                                <VBox>
-                                                    <children>
-                                                        <Label styleClass="param-label" text="Max Attempts:" />
-                                                        <TextField fx:id="txfMaxAttempts" prefWidth="155.0" />
-                                                    </children>
-                                                </VBox>
-
-                                                <Button fx:id="btnGenerateRS" styleClass="btn-primary" text="Generar aleatorio" />
-                                            </children>
-                                        </HBox>
-
-                                        <HBox spacing="10.0">
-                                            <children>
-                                                <Button fx:id="btnRunRandomSearch" styleClass="btn-primary" text="Random Search" />
-                                                <Button fx:id="btnCleanRS" styleClass="btn-ghost" text="Limpiar" />
-                                            </children>
-                                        </HBox>
-
-                                        <Label styleClass="param-label" text="Registro de Operaciones" />
-                                        <ListView fx:id="listViewRSLog" prefHeight="160.0" />
-
-                                        <VBox spacing="8.0" styleClass="info-box">
-                                            <children>
-                                                <Label styleClass="info-title" text="Búsqueda aleatoria en un arreglo" />
-                                                <TextArea editable="false" prefHeight="170.0" wrapText="true" styleClass="info-box"
-                                                          text="Devuelve un arreglo de 2 elementos con el índice encontrado y el número de intentos realizados.&#10;Si el índice es -1 significa que el elemento no fue encontrado en el máximo de intentos permitidos." />
-                                            </children>
-                                        </VBox>
-                                    </children>
-                                </VBox>
-                            </items>
-                        </SplitPane>
-                    </content>
-                </Tab>
-
-                <Tab text="Linked List">
-                    <content>
-                        <SplitPane dividerPositions="0.5615906886517944">
+                        <SplitPane dividerPositions="0.55">
                             <items>
                                 <VBox spacing="10.0" styleClass="panel">
                                     <children>
-                                        <Label styleClass="panel-title" text="Lista enlazada simple: HEAD ➜ nodos ➜ NULL" />
-
-                                        <ScrollPane prefHeight="320.0">
+                                        <Label styleClass="panel-title" text="Lista enlazada circular: HEAD ➔ nodos ➔ HEAD" />
+                                        <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="300.0">
                                             <content>
-                                                <Canvas fx:id="canvasLinkedList" height="300.0" width="1000.0" />
+                                                <AnchorPane fx:id="paneCircularList" style="-fx-background-color: #f8f9fa;" />
                                             </content>
                                         </ScrollPane>
-
                                         <VBox spacing="5.0" styleClass="info-box">
                                             <children>
                                                 <Label text="Representación:" styleClass="info-title" />
-                                                <TextField fx:id="txfListRepresentation" editable="false" />
+                                                <TextField fx:id="txfCircularRep" editable="false" />
                                             </children>
                                         </VBox>
-
-                                        <Label fx:id="lblLinkedListStatus" text="Insertado al inicio: 50" style="-fx-text-fill: #16a085; -fx-font-weight: bold;" />
-
-                                        <Label text="Contenido de la Lista Enlazada Simple" styleClass="panel-title" />
-
-                                        <TableView fx:id="tableListData" prefHeight="230.0">
+                                        <Label fx:id="lblCircularStatus" text="Insertado al inicio: 30" style="-fx-text-fill: #16a085; -fx-font-weight: bold;" />
+                                        <Label text="Contenido de la Lista Enlazada Circular" styleClass="panel-title" />
+                                        <TableView fx:id="tableCircularData" prefHeight="220.0">
                                             <columns>
-                                                <TableColumn fx:id="colListPos" prefWidth="180.0" text="Posición" />
-                                                <TableColumn fx:id="colListElement" prefWidth="180.0" text="Elemento" />
-                                                <TableColumn fx:id="colListInsertion" prefWidth="180.0" text="Se insertó al" />
+                                                <TableColumn fx:id="colCircIndex" prefWidth="80.0" text="indexOf" />
+                                                <TableColumn fx:id="colCircData" prefWidth="100.0" text="Data" />
+                                                <TableColumn fx:id="colCircNext" prefWidth="100.0" text="Next Data" />
+                                                <TableColumn fx:id="colCircPrev" prefWidth="100.0" text="Prev Data" />
+                                                <TableColumn fx:id="colCircHead" prefWidth="100.0" text="Head Data" />
+                                                <TableColumn fx:id="colCircTail" prefWidth="100.0" text="Tail Data" />
                                             </columns>
                                         </TableView>
                                     </children>
                                 </VBox>
-
                                 <VBox spacing="10.0" styleClass="panel">
                                     <children>
-                                        <Label styleClass="action-label" text="Valor" />
-                                        <TextField fx:id="txfListValue" maxWidth="180.0" text="50" />
-                                        <Label text="(Enter = Agregar al final)" />
-
+                                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                            <children>
+                                                <Label styleClass="action-label" text="Valor" />
+                                                <TextField fx:id="txfCircularValue" prefWidth="120.0" text="30" />
+                                            </children>
+                                        </HBox>
                                         <Label text="Operaciones" styleClass="param-label" />
-
-                                        <HBox spacing="10.0">
+                                        <HBox spacing="8.0">
                                             <children>
-                                                <Button fx:id="btnAddFirst" styleClass="btn-primary" text="← Agregar inicio" />
-                                                <Button fx:id="btnAddLast" styleClass="btn-primary" text="Agregar final →" />
+                                                <Button fx:id="btnCircAddFirst" styleClass="btn-primary" text="← Agregar inicio" />
+                                                <Button fx:id="btnCircAddLast" styleClass="btn-primary" text="Agregar final →" />
+                                                <Button fx:id="btnCircAddRandom" styleClass="btn-primary" text="Agregar aleatorio" />
                                             </children>
                                         </HBox>
-
-                                        <HBox spacing="10.0">
+                                        <HBox spacing="8.0">
                                             <children>
-                                                <Button fx:id="btnSearchList" styleClass="btn-primary" text="🔍 Buscar" />
-                                                <Button fx:id="btnRemoveList" styleClass="btn-accent" text="🗑 Eliminar" />
-                                                <Button fx:id="btnCleanList" styleClass="btn-ghost" text="↺ Limpiar Todo" />
+                                                <Button fx:id="btnCircSearch" styleClass="btn-primary" text="🔍 Buscar" />
+                                                <Button fx:id="btnCircRemove" styleClass="btn-accent" text="🗑 Eliminar" />
+                                                <Button fx:id="btnCircClean" styleClass="btn-ghost" text="↺ Limpiar Todo" />
                                             </children>
                                         </HBox>
-
                                         <Label text="Registro de Operaciones" styleClass="param-label" />
-                                        <ListView fx:id="listViewListLog" prefHeight="160.0" />
-
+                                        <TextArea fx:id="txtAreaCircularLog" editable="false" prefHeight="150.0" styleClass="info-box" wrapText="true" />
                                         <VBox styleClass="info-box">
                                             <children>
                                                 <Label text="Estructura del Nodo" styleClass="info-title" />
-                                                <TextArea editable="false" prefHeight="120.0" styleClass="info-box"
-                                                          text="class Node&lt;T&gt; {&#10;    T data;&#10;    Node&lt;T&gt; next;&#10;}" />
+                                                <TextArea editable="false" prefHeight="100.0" styleClass="info-box"
+                                                          text="class Node&lt;T&gt; {&#10;    T data; //dato almacenado en el nodo&#10;    Node&lt;T&gt; next; //apuntador al siguiente nodo o a HEAD&#10;}" />
                                             </children>
                                         </VBox>
                                     </children>
@@ -263,25 +100,209 @@
                     </content>
                 </Tab>
 
-                <Tab text="Doubly Linked List">
+                <Tab text="Circular Doubly Linked List">
                     <content>
-                        <SplitPane dividerPositions="0.51">
+                        <SplitPane dividerPositions="0.55">
                             <items>
                                 <VBox spacing="10.0" styleClass="panel">
                                     <children>
-                                        <Label styleClass="panel-title" text="Lista enlazada doble: HEAD ➔ nodos ➔ NULL" />
-                                        <ScrollPane prefHeight="280.0" styleClass="info-box">
-                                            <content><Canvas fx:id="canvasDoublyList" height="260.0" width="1200.0" /></content>
+                                        <Label styleClass="panel-title" text="Lista enlazada circular y doble: HEAD ➔ nodos ➔ NULL" />
+                                        <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="260.0">
+                                            <content>
+                                                <AnchorPane fx:id="paneCircDoublyList" style="-fx-background-color: #f8f9fa;" />
+                                            </content>
                                         </ScrollPane>
-                                        <TextField fx:id="txfDoublyRepresentation" editable="false" styleClass="info-box" />
-                                        <Label fx:id="lblDoublyStatus" text="Insertado item: 3" style="-fx-text-fill: #16a085; -fx-font-weight: bold;" />
-                                        <Label text="Contenido de la Lista Enlazada Doble" styleClass="panel-title" />
-                                        <TableView fx:id="tableDoublyData" prefHeight="220.0">
+                                        <VBox spacing="5.0" styleClass="info-box">
+                                            <children>
+                                                <Label text="Representación:" styleClass="info-title" />
+                                                <TextField fx:id="txfCircDoublyRep" editable="false" />
+                                            </children>
+                                        </VBox>
+                                        <Label fx:id="lblCircDoublyStatus" text="Insertado item: 2" style="-fx-text-fill: #16a085; -fx-font-weight: bold;" />
+                                        <Label text="Contenido de la Lista Enlazada Circular y Doble" styleClass="panel-title" />
+                                        <TableView fx:id="tableCircDoublyData" prefHeight="220.0">
                                             <columns>
-                                                <TableColumn fx:id="colDId" prefWidth="60.0" text="Id" />
-                                                <TableColumn fx:id="colDName" prefWidth="140.0" text="Nombre" />
-                                                <TableColumn fx:id="colDPosition" prefWidth="140.0" text="Puesto" />
-                                                <TableColumn fx:id="colDHireDate" prefWidth="140.0" text="Fecha ingreso" />
+                                                <TableColumn fx:id="colProdId" prefWidth="60.0" text="Id" />
+                                                <TableColumn fx:id="colProdName" prefWidth="120.0" text="Name" />
+                                                <TableColumn fx:id="colProdPrice" prefWidth="90.0" text="Price" />
+                                                <TableColumn fx:id="colProdStock" prefWidth="80.0" text="Stock" />
+                                                <TableColumn fx:id="colProdType" prefWidth="120.0" text="Type" />
+                                                <TableColumn fx:id="colProdRegDate" prefWidth="120.0" text="Reg Date" />
+                                            </columns>
+                                        </TableView>
+                                    </children>
+                                </VBox>
+                                <VBox spacing="10.0" styleClass="panel">
+                                    <children>
+                                        <VBox spacing="8.0" styleClass="info-box" style="-fx-padding: 10;">
+                                            <children>
+                                                <Label text="Product Information" styleClass="action-label" />
+                                                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                    <children><Label prefWidth="90.0" text="Id:" /><TextField fx:id="txfProdId" prefWidth="150.0" /></children>
+                                                </HBox>
+                                                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                    <children><Label prefWidth="90.0" text="Name:" /><TextField fx:id="txfProdName" prefWidth="180.0" /></children>
+                                                </HBox>
+                                                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                    <children><Label prefWidth="90.0" text="Price:" /><TextField fx:id="txfProdPrice" prefWidth="150.0" /></children>
+                                                </HBox>
+                                                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                    <children><Label prefWidth="90.0" text="Stock:" /><TextField fx:id="txfProdStock" prefWidth="150.0" /></children>
+                                                </HBox>
+                                                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                    <children>
+                                                        <Label prefWidth="90.0" text="Type:" />
+                                                        <ComboBox fx:id="cbProductType" prefWidth="180.0" promptText="--Seleccione el Tipo--">
+                                                            <items>
+                                                                <FXCollections fx:factory="observableArrayList">
+                                                                    <String fx:value="Electrónicos" />
+                                                                    <String fx:value="Tecnológicos" />
+                                                                    <String fx:value="Línea blanca" />
+                                                                    <String fx:value="Comestible" />
+                                                                    <String fx:value="Médico" />
+                                                                    <String fx:value="Suministros" />
+                                                                </FXCollections>
+                                                            </items>
+                                                        </ComboBox>
+                                                    </children>
+                                                </HBox>
+                                                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                    <children><Label prefWidth="90.0" text="Register date:" /><DatePicker fx:id="dpProdRegDate" /></children>
+                                                </HBox>
+                                            </children>
+                                        </VBox>
+                                        <Label text="Operaciones" styleClass="param-label" />
+                                        <HBox spacing="8.0">
+                                            <children>
+                                                <Button fx:id="btnProdAdd" styleClass="btn-primary" text="Agregar" />
+                                                <Button fx:id="btnProdSearch" styleClass="btn-primary" text="🔍 Buscar" />
+                                                <Button fx:id="btnProdCleanForm" styleClass="btn-ghost" text="Limpiar Todo" />
+                                            </children>
+                                        </HBox>
+                                        <HBox spacing="8.0">
+                                            <children>
+                                                <Button fx:id="btnProdSortName" styleClass="btn-primary" text="Ordenar por Nombre" />
+                                                <Button fx:id="btnProdSortStock" styleClass="btn-primary" text="Ordenar por Stock" />
+                                            </children>
+                                        </HBox>
+                                        <HBox spacing="8.0">
+                                            <children>
+                                                <Button fx:id="btnProdRemove" styleClass="btn-accent" text="🗑 Eliminar" />
+                                                <Button fx:id="btnProdRemoveFirst" styleClass="btn-accent" text="🗑 Eliminar Inicio" />
+                                                <Button fx:id="btnProdRemoveLast" styleClass="btn-accent" text="🗑 Eliminar Final" />
+                                            </children>
+                                        </HBox>
+                                        <Label text="Registro de Operaciones" styleClass="param-label" />
+                                        <TextArea fx:id="txtAreaCircDoublyLog" editable="false" prefHeight="110.0" styleClass="info-box" wrapText="true" />
+                                        <VBox styleClass="info-box">
+                                            <children>
+                                                <Label text="Estructura del Nodo" styleClass="info-title" />
+                                                <TextArea editable="false" prefHeight="95.0" styleClass="info-box"
+                                                          text="class Node&lt;T&gt; {&#10;    T data; //dato almacenado en el nodo&#10;    Node&lt;T&gt; next; //apuntador al siguiente nodo o a HEAD&#10;    Node&lt;T&gt; prev; //apuntador al nodo anterior o a TAIL&#10;}" />
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </VBox>
+                            </items>
+                        </SplitPane>
+                    </content>
+                </Tab>
+
+                <Tab text="Linked Stack">
+                    <content>
+                        <SplitPane dividerPositions="0.55">
+                            <items>
+                                <VBox spacing="10.0" styleClass="panel">
+                                    <children>
+                                        <Label styleClass="panel-title" text="Pila enlazada: TOP ➔ nodos ➔ BOTTOM" />
+                                        <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="280.0">
+                                            <content>
+                                                <AnchorPane fx:id="paneStackSimulation" style="-fx-background-color: #1e1e24;" />
+                                            </content>
+                                        </ScrollPane>
+                                        <VBox spacing="5.0" styleClass="info-box">
+                                            <children>
+                                                <Label text="Representación:" styleClass="info-title" />
+                                                <TextField fx:id="txfStackRep" editable="false" />
+                                            </children>
+                                        </VBox>
+                                        <Label fx:id="lblStackStatus" text="Apilado en el tope de la pila: 20" style="-fx-text-fill: #16a085; -fx-font-weight: bold;" />
+                                        <Label text="Contenido de la Pila Enlazada" styleClass="panel-title" />
+                                        <TableView fx:id="tableStackData" prefHeight="220.0">
+                                            <columns>
+                                                <TableColumn fx:id="colStackNode" prefWidth="120.0" text="Node" />
+                                                <TableColumn fx:id="colStackData" prefWidth="150.0" text="Data" />
+                                                <TableColumn fx:id="colStackNext" prefWidth="150.0" text="Next Node" />
+                                            </columns>
+                                        </TableView>
+                                    </children>
+                                </VBox>
+                                <VBox spacing="10.0" styleClass="panel">
+                                    <children>
+                                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                            <children>
+                                                <Label styleClass="action-label" text="Valor" />
+                                                <TextField fx:id="txfStackValue" prefWidth="120.0" text="20" />
+                                            </children>
+                                        </HBox>
+                                        <Label text="Operaciones" styleClass="param-label" />
+                                        <HBox spacing="8.0">
+                                            <children>
+                                                <Button fx:id="btnStackPush" styleClass="btn-primary" text="Apilar (Push)" />
+                                                <Button fx:id="btnStackPushRandom" styleClass="btn-primary" text="Apilar (Push) aleatorio" />
+                                            </children>
+                                        </HBox>
+                                        <HBox spacing="8.0">
+                                            <children>
+                                                <Button fx:id="btnStackSearch" styleClass="btn-primary" text="🔍 Buscar" />
+                                                <Button fx:id="btnStackPop" styleClass="btn-accent" text="🗑 Desapilar" />
+                                                <Button fx:id="btnStackRemoveValue" styleClass="btn-accent" text="🗑 Eliminar Valor" />
+                                                <Button fx:id="btnStackClean" styleClass="btn-ghost" text="Limpiar Todo" />
+                                            </children>
+                                        </HBox>
+                                        <Label text="Registro de Operaciones" styleClass="param-label" />
+                                        <TextArea fx:id="txtAreaStackLog" editable="false" prefHeight="140.0" styleClass="info-box" wrapText="true" />
+                                        <VBox styleClass="info-box">
+                                            <children>
+                                                <Label text="La interface MyStack" styleClass="info-title" />
+                                                <TextArea editable="false" prefHeight="150.0" styleClass="info-box"
+                                                          text="public interface MyStack&lt;T&gt; {&#10;    public int size();&#10;    public void clear();&#10;    public boolean isEmpty();&#10;    public T peek() throws StackException;&#10;    public T top() throws StackException;&#10;    public void push(T element) throws StackException;&#10;    public T pop() throws StackException;&#10;}" />
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </VBox>
+                            </items>
+                        </SplitPane>
+                    </content>
+                </Tab>
+
+                <Tab text="Priority Queue">
+                    <content>
+                        <SplitPane dividerPositions="0.55">
+                            <items>
+                                <VBox spacing="10.0" styleClass="panel">
+                                    <children>
+                                        <Label styleClass="panel-title" text="Cola de prioridad enlazada: FRONT ➔ nodos ➔ REAR" />
+                                        <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="280.0">
+                                            <content>
+                                                <AnchorPane fx:id="panePrioritySim" style="-fx-background-color: #1e1e24;" />
+                                            </content>
+                                        </ScrollPane>
+                                        <VBox spacing="5.0" styleClass="info-box">
+                                            <children>
+                                                <Label text="Representación:" styleClass="info-title" />
+                                                <TextField fx:id="txfPriorityRep" editable="false" styleClass="info-box" />
+                                            </children>
+                                        </VBox>
+                                        <Label fx:id="lblPriorityStatus" text="Encolado en el frente de la cola: 2" style="-fx-text-fill: #16a085; -fx-font-weight: bold;" />
+                                        <Label text="Contenido de la Cola de Prioridad Enlazada" styleClass="panel-title" />
+                                        <TableView fx:id="tablePriorityData" prefHeight="220.0">
+                                            <columns>
+                                                <TableColumn fx:id="colPId" prefWidth="60.0" text="Id" />
+                                                <TableColumn fx:id="colPName" prefWidth="140.0" text="Name" />
+                                                <TableColumn fx:id="colPAge" prefWidth="60.0" text="Age" />
+                                                <TableColumn fx:id="colPService" prefWidth="160.0" text="Banking Service" />
+                                                <TableColumn fx:id="colPDate" prefWidth="120.0" text="Date" />
                                             </columns>
                                         </TableView>
                                     </children>
@@ -291,32 +312,43 @@
                                     <children>
                                         <VBox spacing="10.0" styleClass="info-box" style="-fx-padding: 10;">
                                             <children>
-                                                <Label text="Employee Information" styleClass="action-label" />
+                                                <Label text="Bank Client Information" styleClass="action-label" />
                                                 <HBox alignment="CENTER_LEFT" spacing="10.0">
-                                                    <children><Label prefWidth="80.0" text="Id:" /><TextField fx:id="txfEmpId" prefWidth="150.0" /></children>
+                                                    <children><Label prefWidth="100.0" text="Id:" /><TextField fx:id="txfClientId" prefWidth="150.0" /></children>
                                                 </HBox>
                                                 <HBox alignment="CENTER_LEFT" spacing="10.0">
-                                                    <children><Label prefWidth="80.0" text="Name:" /><TextField fx:id="txfEmpName" prefWidth="200.0" /></children>
+                                                    <children><Label prefWidth="100.0" text="Name:" /><TextField fx:id="txfClientName" prefWidth="220.0" /></children>
                                                 </HBox>
                                                 <HBox alignment="CENTER_LEFT" spacing="10.0">
                                                     <children>
-                                                        <Label prefWidth="80.0" text="Job Position:" />
-                                                        <ComboBox fx:id="cbJobPosition" prefWidth="150.0">
+                                                        <VBox spacing="4.0">
+                                                            <children>
+                                                                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                                    <children><Label prefWidth="100.0" text="Age:" /><TextField fx:id="txfClientAge" prefWidth="100.0" /></children>
+                                                                </HBox>
+                                                                <Label style="-fx-text-fill: #d35400; -fx-font-size: 11px;" text="Edad: mayor o igual a 65 prioridad 1, mayor o igual a 50 prioridad 2, default prioridad 3" />
+                                                            </children>
+                                                        </VBox>
+                                                    </children>
+                                                </HBox>
+                                                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                    <children>
+                                                        <Label prefWidth="100.0" text="Banking Services:" />
+                                                        <ComboBox fx:id="cbBankService" prefWidth="200.0" promptText="--Seleccione el Servicio--">
                                                             <items>
                                                                 <FXCollections fx:factory="observableArrayList">
-                                                                    <String fx:value="Informático/a" />
-                                                                    <String fx:value="Doctor/a" />
-                                                                    <String fx:value="Docente" />
-                                                                    <String fx:value="Administrador/a" />
-                                                                    <String fx:value="Periodista" />
-                                                                    <String fx:value="Arquitecto/a" />
+                                                                    <String fx:value="Plataforma" />
+                                                                    <String fx:value="Cajas" />
+                                                                    <String fx:value="Créditos y Préstamos" />
+                                                                    <String fx:value="Gestión de Cuentas" />
+                                                                    <String fx:value="Atención al Cliente y Reclamos" />
                                                                 </FXCollections>
                                                             </items>
                                                         </ComboBox>
                                                     </children>
                                                 </HBox>
                                                 <HBox alignment="CENTER_LEFT" spacing="10.0">
-                                                    <children><Label prefWidth="80.0" text="Hire date:" /><DatePicker fx:id="dpHireDate" /></children>
+                                                    <children><Label prefWidth="100.0" text="Date:" /><DatePicker fx:id="dpClientDate" /></children>
                                                 </HBox>
                                             </children>
                                         </VBox>
@@ -324,35 +356,32 @@
                                         <Label text="Operaciones" styleClass="param-label" />
                                         <HBox spacing="8.0">
                                             <children>
-                                                <Button fx:id="btnDAdd" styleClass="btn-primary" text="Agregar" />
-                                                <Button fx:id="btnDSearch" styleClass="btn-primary" text="🔍 Buscar" />
-                                                <Button fx:id="btnDCleanForm" styleClass="btn-ghost" text="↺ Limpiar Todo" />
+                                                <Button fx:id="btnEnqueue" styleClass="btn-primary" text="Encolar" />
+                                                <Button fx:id="btnEnqueueRandom" styleClass="btn-primary" text="Encolar Automático" />
+                                                <Button fx:id="btnPriorityCleanForm" styleClass="btn-ghost" text="↺ Limpiar Todo" />
                                             </children>
                                         </HBox>
                                         <HBox spacing="8.0">
                                             <children>
-                                                <Button fx:id="btnDFirst" prefWidth="70.0" styleClass="btn-primary" text="Primero" />
-                                                <Button fx:id="btnDLast" prefWidth="70.0" styleClass="btn-primary" text="Último" />
-                                                <Button fx:id="btnDPrev" prefWidth="70.0" styleClass="btn-primary" text="Anterior" />
-                                                <Button fx:id="btnDNext" prefWidth="70.0" styleClass="btn-primary" text="Siguiente" />
+                                                <Button fx:id="btnPriorityPeek" prefWidth="100.0" styleClass="btn-primary" text="Peek/Front" />
+                                                <Button fx:id="btnPriorityIndexof" prefWidth="100.0" styleClass="btn-primary" text="Indexof" />
                                             </children>
                                         </HBox>
                                         <HBox spacing="8.0">
                                             <children>
-                                                <Button fx:id="btnDRemove" styleClass="btn-accent" text="🗑 Eliminar" />
-                                                <Button fx:id="btnDRemoveFirst" styleClass="btn-accent" text="🗑 Eliminar Inicio" />
-                                                <Button fx:id="btnDRemoveLast" styleClass="btn-accent" text="🗑 Eliminar Final" />
+                                                <Button fx:id="btnDequeue" styleClass="btn-accent" text="Desencolar" />
+                                                <Button fx:id="btnRemoveClient" styleClass="btn-accent" text="Eliminar cliente" />
                                             </children>
                                         </HBox>
 
                                         <Label text="Registro de Operaciones" styleClass="param-label" />
-                                        <ListView fx:id="listViewDoublyLog" prefHeight="130.0" />
+                                        <TextArea fx:id="txtAreaPriorityLog" editable="false" prefHeight="100.0" styleClass="info-box" wrapText="true" />
 
                                         <VBox styleClass="info-box">
                                             <children>
-                                                <Label text="Estructura del Nodo" styleClass="info-title" />
-                                                <TextArea editable="false" prefHeight="100.0" styleClass="info-box"
-                                                          text="class Node&lt;T&gt; {&#10;    T data; //dato almacenado en el nodo&#10;    Node&lt;T&gt; next; //apuntador al siguiente nodo o a NULL&#10;    Node&lt;T&gt; prev; //apuntador al nodo anterior o a NULL&#10;}" />
+                                                <Label text="La interface MyQueue" styleClass="info-title" />
+                                                <TextArea editable="false" prefHeight="210.0" styleClass="info-box"
+                                                          text="public interface MyQueue&lt;T&gt; {&#10;    public int size();&#10;    public void clear();&#10;    public boolean isEmpty();&#10;    public int indexOf(T element) throws QueueException;&#10;    public void enqueue(T element) throws QueueException;&#10;    public T dequeue() throws QueueException;&#10;    public void enqueue(T element, Integer priority) throws QueueException;&#10;    public boolean contains(T element) throws QueueException;&#10;}" />
                                             </children>
                                         </VBox>
                                     </children>

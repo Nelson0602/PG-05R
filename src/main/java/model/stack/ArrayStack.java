@@ -1,6 +1,6 @@
 package model.stack;
 
-public class ArrayStack<T> implements MyStack {
+public class ArrayStack<T> implements MyStack<T> {
 
     private int n;
     private int top;
@@ -43,19 +43,17 @@ public class ArrayStack<T> implements MyStack {
     }
 
     @Override
-    public void push(Object element) throws StackException {
+    public void push(T element) throws StackException {
         if (top == n - 1) {
             throw new StackException("Array Stack is full");
         }
-        data[++top] = (T) element;
+        data[++top] = element;
 
     }
 
     @Override
-    public Object pop() throws StackException {
+    public T pop() throws StackException {
         if (isEmpty()) throw new StackException("Array Stack is empty");
-
-
         return this.data[top--];
     }
 
@@ -69,6 +67,7 @@ public class ArrayStack<T> implements MyStack {
                 sb.append("[").append(peek()).append("] ");
                 auxStack.push(pop());
                 if(isEmpty()) sb.append(", ");
+
             }
             //dejamos la pila original
             while (!auxStack.isEmpty())

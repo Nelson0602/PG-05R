@@ -44,6 +44,30 @@ class LinkedListTest {
         printList(allFilter);
     }
 
+    @Test
+    void reverseRequiredOutputTest() {
+        LinkedList<Integer> list = new LinkedList<>();
+
+        int[] valores = {16, 11, 2, 28, 34, 44, 14, 41, 17, 14};
+        for (int v : valores) {
+            list.add(v);
+        }
+
+
+        System.out.println(list.toString());
+
+        System.out.println("---------------------------");
+
+        System.out.println("llamando el metodo al reves ....");
+
+        list.reverse();
+
+        System.out.println(list.toString());
+    }
+
+
+
+
     private LinkedList<Person> getPersonList(LinkedList<Person> linkedList, int minAge, int maxAge,
                                              double minWeight, double maxWeight,
                                              double minHeight, double maxHeight,

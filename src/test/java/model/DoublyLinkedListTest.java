@@ -67,5 +67,45 @@ class DoublyLinkedListTest {
         } catch (ListException e) {
             System.out.println(e.getMessage());
         }
+
+
+            DoublyLinkedList<Integer> list = new DoublyLinkedList<>();
+
+            int[] initialData = {45, 42, 31, 31, 34, 2, 38, 2, 20, 44};
+            for (int value : initialData) {
+                list.add(value);
+            }
+
+            System.out.println("Lista inicial");
+            System.out.println(list);
+            System.out.println("_".repeat(50));
+
+
+            System.out.println("addAtPosK(100, 1)");
+            list.addAtPosK(100, 1);
+            System.out.println(list);
+
+
+            System.out.println("addAtPosK(200, 5)");
+            list.addAtPosK(200, 5);
+            System.out.println(list);
+
+
+            System.out.println("addAtPosK(300, 10)");
+            list.addAtPosK(300, 10);
+            System.out.println(list);
+
+
+            System.out.println("addAtPosK(400, 14)");
+            list.addAtPosK(400, 14);
+            System.out.println(list);
+
+
+            System.out.println("addAtPosK(500, 20)");
+            list.addAtPosK(500, 20);
+            System.out.println(list);
+        }
     }
-}
+
+
+
