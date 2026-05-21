@@ -36,8 +36,8 @@ public class LinkedStack<T> implements MyStack<T> {
 
     @Override
     public T top() throws StackException {
-        if (isEmpty()) throw new StackException("Linked Stack is empty");
-        return top.data;
+        // top() es un alias para peek() según la interfaz
+        return peek();
     }
 
     @Override
@@ -65,19 +65,28 @@ public class LinkedStack<T> implements MyStack<T> {
     public String toString() {
         if (isEmpty()) return "Linked Stack is Empty";
         StringBuilder sb = new StringBuilder("TOP → ");
+        
+        // Usar un LinkedStack auxiliar para no modificar la pila original
+        LinkedStack<T> auxStack = new LinkedStack<>();
+        
         try {
-            LinkedStack<T> auxStack = new LinkedStack<>();
+            // Vaciar la pila original en la auxiliar y construir el string
             while (!isEmpty()) {
-                sb.append("[").append(peek()).append("] ");
-                auxStack.push(pop());
-                if(isEmpty()) sb.append(", ");
+                T element = pop();
+                sb.append("[").append(element).append("]");
+                auxStack.push(element);
+                if (!isEmpty()) { // Solo añade el separador si no es el último elemento
+                    sb.append(" → ");
+                }
             }
-            //dejamos la pila original
-            while (!auxStack.isEmpty())
+            // Restaurar la pila original desde la auxiliar
+            while (!auxStack.isEmpty()) {
                 push(auxStack.pop());
-
+            }
         } catch (StackException e) {
-            System.out.println(e.getMessage());
+            // Para toString, es mejor no lanzar una excepción checked o imprimir en System.out.
+            // Se devuelve un string parcial con un mensaje de error.
+            return "Error generating Linked Stack string: " + e.getMessage();
         }
         sb.append(" → BOTTOM");
         return sb.toString();

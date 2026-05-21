@@ -1,78 +1,97 @@
 package model.queue;
 
-import model.stack.ArrayStack;
+// import model.stack.ArrayStack; // Eliminado: no se utiliza
 
 public class ArrayQueue<T> implements MyQueue<T> {
-    private int n; //el tam max de la cola
-    private T[] data; //arreglo de objetos
-    private Integer[] priorityQueue; //para el manejo de prioridades
-    //me permite manejar los extremos de la cola
-    private int front, rear; //anterior, posterior
+    private final int n; // La capacidad máxima de la cola (final)
+    private T[] data; // Arreglo para almacenar los elementos
+    // private Integer[] priorityQueue; // Eliminado: esta clase es una cola simple, no de prioridad
+    
+    private int front; // Índice del primer elemento
+    private int rear;  // Índice de la siguiente posición disponible
+    private int count; // Número actual de elementos en la cola
 
-    //Constructor
+    // Constructor
     public ArrayQueue(int n) {
-        if (n <= 0) System.exit(1); //se sale
+        if (n <= 0) {
+            throw new IllegalArgumentException("Queue capacity must be greater than 0");
+        }
         this.n = n;
-        this.data = (T[]) new Object[n];//n=capacidad
-        this.priorityQueue = new Integer[n];
-        this.rear = n - 1; //ultimo elemento de la cola
-        this.front = rear;
+        this.data = (T[]) new Object[n]; // n = capacidad
+        this.front = 0;
+        this.rear = 0;
+        this.count = 0;
     }
 
     @Override
     public int size() {
-        return rear - front;
+        return count;
     }
 
     @Override
     public void clear() {
-
-        data = (T[]) new Object[n];//n=capacidad
-        priorityQueue = new Integer[n];
-        rear = n - 1; //ultimo elemento de la cola
-        front = rear;
+        // Opcional: nullificar elementos para ayudar al GC
+        for (int i = 0; i < count; i++) {
+            data[(front + i) % n] = null;
+        }
+        front = 0;
+        rear = 0;
+        count = 0;
     }
 
     @Override
     public boolean isEmpty() {
-        return front == rear;
+        return count == 0;
+    }
+
+    public boolean isFull() {
+        return count == n;
     }
 
     @Override
     public int indexOf(T element) throws QueueException {
         if (isEmpty()) throw new QueueException("Array Queue is empty");
-        ArrayQueue<T> aux= new ArrayQueue<>(size());
-        int index=0;
+        
+        // Usamos una cola auxiliar para no modificar la original
+        ArrayQueue<T> auxQueue = new ArrayQueue<>(this.n); // Usar la capacidad original
         int pos = -1;
-        while (!isEmpty()) {
-            if (equals(front(), element)){
-                pos = index;
+        int currentPos = 1; // Posición 1-basada
+
+        try {
+            while (!isEmpty()) {
+                T currentElement = deQueue();
+                if (equals(currentElement, element)) {
+                    pos = currentPos;
+                }
+                auxQueue.enQueue(currentElement);
+                currentPos++;
             }
-            aux.enQueue(deQueue());
-            index++;
-
+            // Restaurar la cola original
+            while (!auxQueue.isEmpty()) {
+                enQueue(auxQueue.deQueue());
+            }
+        } catch (QueueException e) {
+            // Esto no debería ocurrir si la lógica de enQueue/deQueue es correcta
+            throw new RuntimeException("Error during indexOf operation: " + e.getMessage(), e);
         }
-        while (!aux.isEmpty())
-            enQueue(aux.deQueue());
-        //al final dejamos el tda colaen en su estado original
-
         return pos;
     }
 
     @Override
     public void enQueue(T element) throws QueueException {
-        if (size() == data.length) {
+        if (isFull()) {
             throw new QueueException("Array Queue is full");
         }
-        //la primera vez cuando esta vacio no entra al for
-        for (int i = front; i < rear; i++) {
-            data[i] = data[i + 1];//mueve el elemento una pos a la izquierda
-            priorityQueue[i] = priorityQueue[i + 1];
-        }
         data[rear] = element;
-        priorityQueue[rear] = 3; // prioridad por defecto baja
-        front--;//la idea es que anterior que en un campo vacio
+        rear = (rear + 1) % n; // Mover rear circularmente
+        count++;
+    }
 
+    @Override
+    public void enQueue(T element, Integer priority) throws QueueException {
+        // Esta es una cola FIFO simple, la prioridad se ignora.
+        // Simplemente encola el elemento como si no tuviera prioridad.
+        enQueue(element);
     }
 
     @Override
@@ -80,79 +99,67 @@ public class ArrayQueue<T> implements MyQueue<T> {
         if (isEmpty()) {
             throw new QueueException("Array Queue is empty");
         }
-        return data[++front];
-    }
-
-    @Override
-    public void enQueue(T element, Integer priority) throws QueueException {
-        if (size() == data.length) {
-            throw new QueueException("Array Queue is full");
-        }
-        if (priority == null) priority = 3;
-        if (priority < 1) priority = 1;
-        if (priority > 3) priority = 3;
-        // desplazamos datos y prioridades a la izquierda
-        for (int i = front; i < rear; i++) {
-            data[i] = data[i + 1];
-            priorityQueue[i] = priorityQueue[i + 1];
-        }
-        data[rear] = element;
-        priorityQueue[rear] = priority;
-        front--;
+        T item = data[front];
+        data[front] = null; // Ayuda al recolector de basura
+        front = (front + 1) % n; // Mover front circularmente
+        count--;
+        return item;
     }
 
     @Override
     public boolean contains(T element) throws QueueException {
         if (isEmpty()) throw new QueueException("Array Queue is empty");
-        ArrayQueue<T> aux= new ArrayQueue<>(size());
-        boolean finded= false;
-        int index=1;
-        while (!isEmpty()) {
-            if (equals(front(), element)){
-                finded = true;
-            }
-            aux.enQueue(deQueue());
-        }
-        while (!aux.isEmpty())
-            enQueue(aux.deQueue());
-        //al final dejamos el tda colaen en su estado original
+        
+        ArrayQueue<T> auxQueue = new ArrayQueue<>(this.n); // Usar la capacidad original
+        boolean found = false;
 
-        return finded;
+        try {
+            while (!isEmpty()) {
+                T currentElement = deQueue();
+                if (equals(currentElement, element)) {
+                    found = true;
+                }
+                auxQueue.enQueue(currentElement);
+            }
+            // Restaurar la cola original
+            while (!auxQueue.isEmpty()) {
+                enQueue(auxQueue.deQueue());
+            }
+        } catch (QueueException e) {
+            throw new RuntimeException("Error during contains operation: " + e.getMessage(), e);
+        }
+        return found;
     }
 
     @Override
     public T peek() throws QueueException {
         if (isEmpty()) throw new QueueException("Array Queue is empty");
-        return data[front + 1];
+        return data[front];
     }
 
     @Override
     public T front() throws QueueException {
-        if (isEmpty()) throw new QueueException("Array Queue is empty");
-        return data[front + 1];
+        return peek(); // front() es un alias para peek()
     }
 
     @Override
     public String toString() {
-        if(isEmpty()) return "Arrat Queue is empty";
-        StringBuilder sb =new StringBuilder("FRONT -> ");
-        ArrayQueue<T> auxQueue = new ArrayQueue<>(size());
-        try {
-            while (!isEmpty()){
-
-                sb.append("[").append(peek()).append("]");
-                auxQueue.enQueue(deQueue());
-                if(!isEmpty()) sb.append(", ");
+        if(isEmpty()) return "Array Queue is empty";
+        StringBuilder sb = new StringBuilder("FRONT -> ");
+        
+        // Iterar sin modificar la cola
+        int current = front;
+        for (int i = 0; i < count; i++) {
+            sb.append("[").append(data[current]).append("]");
+            if (i < count - 1) {
+                sb.append(" -> ");
             }
-            while ((!auxQueue.isEmpty())){
-                enQueue((auxQueue.deQueue()));
-            }
-        } catch (QueueException e) {
-            throw new RuntimeException(e);
+            current = (current + 1) % n;
         }
-        sb.append(" → REAR");
+        sb.append(" -> REAR");
         return sb.toString();
     }
+
     private boolean equals(T a, T b) {
         return a == null ? b == null : a.equals(b);
     }

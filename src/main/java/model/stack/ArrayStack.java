@@ -2,27 +2,31 @@ package model.stack;
 
 public class ArrayStack<T> implements MyStack<T> {
 
-    private int n;
-    private int top;
-    private T[] data;
+    private final int n; // La capacidad máxima de la pila (final)
+    private int top; // Índice del tope de la pila
+    private T[] data; // Arreglo para almacenar los elementos
 
     public ArrayStack(int n) {
-        if (n <= 0) System.exit(1);
+        if (n <= 0) {
+            throw new IllegalArgumentException("Stack capacity must be greater than 0");
+        }
         this.n = n;
-        this.top = -1;//Fuera de cualquier indice del arreglo
-        data = (T[]) new Object[n];
+        this.top = -1; // Fuera de cualquier índice del arreglo, indica pila vacía
+        data = (T[]) new Object[n]; // Inicializa el arreglo
     }
-
 
     @Override
     public int size() {
-        return top + 1;
+        return top + 1; // El número de elementos es top + 1
     }
 
     @Override
     public void clear() {
-        this.top = -1;//Fuera de cualquier indice del arreglo
-        data = (T[]) new Object[n];
+        // Opcional: nullificar elementos para ayudar al GC
+        for (int i = 0; i <= top; i++) {
+            data[i] = null;
+        }
+        this.top = -1; // Restablece el tope a -1
     }
 
     @Override
@@ -38,43 +42,53 @@ public class ArrayStack<T> implements MyStack<T> {
 
     @Override
     public T top() throws StackException {
-        if (isEmpty()) throw new StackException("Array Stack is empty");
-        return this.data[top];
+        // top() es un alias para peek() según la interfaz
+        return peek();
     }
 
     @Override
     public void push(T element) throws StackException {
-        if (top == n - 1) {
+        if (top == n - 1) { // Si el tope es el último índice, la pila está llena
             throw new StackException("Array Stack is full");
         }
-        data[++top] = element;
-
+        data[++top] = element; // Incrementa top y luego asigna el elemento
     }
 
     @Override
     public T pop() throws StackException {
         if (isEmpty()) throw new StackException("Array Stack is empty");
-        return this.data[top--];
+        T element = this.data[top]; // Obtiene el elemento del tope
+        this.data[top--] = null; // Nullifica el elemento y luego decrementa top
+        return element;
     }
 
     @Override
     public String toString() {
         if (isEmpty()) return "Array Stack is Empty";
-        StringBuilder sb = new StringBuilder(" → ");
+        StringBuilder sb = new StringBuilder("TOP → ");
+        
+        // Usar un ArrayStack auxiliar para no modificar la pila original
+        ArrayStack<T> auxStack = new ArrayStack<>(this.n); // Misma capacidad
+        
         try {
-            LinkedStack<T> auxStack = new LinkedStack<>();
+            // Vaciar la pila original en la auxiliar y construir el string
             while (!isEmpty()) {
-                sb.append("[").append(peek()).append("] ");
-                auxStack.push(pop());
-                if(isEmpty()) sb.append(", ");
-
+                T element = pop();
+                sb.append("[").append(element).append("]");
+                auxStack.push(element);
+                if (!isEmpty()) { // Solo añade el separador si no es el último elemento
+                    sb.append(" → ");
+                }
             }
-            //dejamos la pila original
-            while (!auxStack.isEmpty())
+            // Restaurar la pila original desde la auxiliar
+            while (!auxStack.isEmpty()) {
                 push(auxStack.pop());
-
+            }
         } catch (StackException e) {
-            System.out.println(e.getMessage());
+            // Si ocurre una excepción durante la operación, se puede lanzar como RuntimeException
+            // o simplemente devolver el string parcial con un mensaje de error.
+            // Para toString, es mejor no lanzar una excepción checked.
+            return "Error generating Array Stack string: " + e.getMessage();
         }
         sb.append(" → BOTTOM");
         return sb.toString();

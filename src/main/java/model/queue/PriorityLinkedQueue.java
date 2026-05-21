@@ -63,31 +63,41 @@ public class PriorityLinkedQueue<T> implements MyQueue<T> {
         if (priority < 1) priority = 1;
         if (priority > 3) priority = 3;
         Node<T> node = new Node<>(element, priority);
-        // caso cola vacía
+
+        // Caso 1: Cola vacía
         if (isEmpty()) {
             front = rear = node;
-            size++;
-            return;
         }
-        // si va al frente (mayor prioridad que front)
-        if (node.priority < front.priority) {
+        // Caso 2: Insertar al frente (mayor prioridad que front)
+        else if (node.priority < front.priority) {
             node.next = front;
             front = node;
-            size++;
-            return;
         }
-        // recorrer para insertar donde corresponda (mantener FIFO dentro misma prioridad)
-        Node<T> cur = front;
-        Node<T> prev = null;
-        while (cur != null && cur.priority <= node.priority) {
-            prev = cur;
-            cur = cur.next;
+        // Caso 3: Insertar en medio o al final
+        else {
+            Node<T> cur = front;
+            Node<T> prev = null;
+            // Buscar la posición correcta para insertar (mantener FIFO dentro de la misma prioridad)
+            while (cur != null && cur.priority <= node.priority) {
+                prev = cur;
+                cur = cur.next;
+            }
+
+            // Insertar después de prev
+            if (prev != null) { // Si no es el nuevo front
+                prev.next = node;
+                node.next = cur;
+            } else { // Si el nuevo nodo es el front (esto no debería ocurrir si el caso 2 es correcto, pero por seguridad)
+                node.next = front;
+                front = node;
+            }
+
+            // Si se insertó al final, actualizar rear
+            if (cur == null) {
+                rear = node;
+            }
         }
-        // insert after prev
-        prev.next = node;
-        node.next = cur;
-        if (cur == null) rear = node;
-        size++;
+        size++; // Incrementar el tamaño una sola vez por cada enQueue exitoso
     }
 
     @Override

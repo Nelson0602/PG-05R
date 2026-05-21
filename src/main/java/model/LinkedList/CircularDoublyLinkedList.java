@@ -121,11 +121,16 @@ public class CircularDoublyLinkedList<T> implements List<T>, Cloneable {
         while (aux.next != head && compare(aux.next.data, element) < 0) {
             aux = aux.next;
         }
+        // Insertar entre aux y aux.next
         node.next = aux.next;
         node.prev = aux;
         aux.next.prev = node;
         aux.next = node;
-        if (aux == tail) tail = node;
+
+        // Si se insertó al final (el nuevo nodo apunta al head), actualizar tail
+        if (node.next == head) {
+            tail = node;
+        }
     }
 
     @Override
@@ -139,18 +144,23 @@ public class CircularDoublyLinkedList<T> implements List<T>, Cloneable {
             return;
         }
         //Caso general. Elemento puede estar en medio o al final
-        Node<T> prev = head; //anterior
-        while (prev.next != head) {
-            if (equals(prev.next.data, element)) {
-                Node<T> removed = prev.next;
-                //desenlanza el nodo
-                prev.next = removed.next;
-                removed.next.prev = prev;
-                if (removed == tail) tail = prev;
-                return; //rompe el bucle
+        Node<T> aux = head; // Usamos aux para recorrer y encontrar el elemento
+        do {
+            if (equals(aux.data, element)) {
+                // Encontramos el elemento a eliminar (es 'aux')
+                aux.prev.next = aux.next; // El nodo anterior apunta al siguiente de 'aux'
+                aux.next.prev = aux.prev; // El nodo siguiente apunta al anterior de 'aux'
+
+                if (aux == tail) { // Si 'aux' era el último nodo, actualizamos tail
+                    tail = aux.prev;
+                }
+                return; // Elemento encontrado y removido
             }
-            prev = prev.next; //se mueve al sgte nodo
-        }
+            aux = aux.next; // se mueve al sgte nodo
+        } while (aux != head);
+
+        // Si el bucle termina y el elemento no fue encontrado
+        throw new ListException("Element " + element + " not found in the list.");
     }
 
     @Override
@@ -159,13 +169,13 @@ public class CircularDoublyLinkedList<T> implements List<T>, Cloneable {
             throw new ListException("Circular Doubly Linked List is empty");
         }
         T first = head.data;
-        if (head == tail) {
+        if (head == tail) { // Un solo nodo
             clear();
             return first;
         }
-        head = head.next;
-        head.prev = tail;
-        tail.next = head;
+        head = head.next; // El nuevo head es el siguiente
+        head.prev = tail; // El nuevo head.prev apunta al tail (circular)
+        tail.next = head; // El tail.next apunta al nuevo head (circular)
         return first;
     }
 
@@ -175,25 +185,27 @@ public class CircularDoublyLinkedList<T> implements List<T>, Cloneable {
             throw new ListException("Circular Doubly Linked List is empty");
         }
         T last = tail.data;
-        if (head == tail) {
+        if (head == tail) { // Un solo nodo
             clear();
             return last;
         }
-        tail = tail.prev;
-        tail.next = head;
-        head.prev = tail;
+        tail = tail.prev; // El nuevo tail es el anterior al actual
+        tail.next = head; // El nuevo tail.next apunta al head (circular)
+        head.prev = tail; // El head.prev apunta al nuevo tail (circular)
         return last;
     }
 
     @Override
     public void sort() throws ListException {
-        if (isEmpty() || head == tail) return;
+        if (isEmpty() || head == tail) return; // Lista vacía o con un solo elemento
         boolean swapped;
         do {
             swapped = false;
             Node<T> cur = head;
+            // Recorre la lista hasta el nodo anterior al head (que es el tail)
             while (cur.next != head) {
                 if (compare(cur.data, cur.next.data) > 0) {
+                    // Intercambia los datos
                     T tmp = cur.data;
                     cur.data = cur.next.data;
                     cur.next.data = tmp;
@@ -201,7 +213,7 @@ public class CircularDoublyLinkedList<T> implements List<T>, Cloneable {
                 }
                 cur = cur.next;
             }
-        } while (swapped);
+        } while (swapped); // Repite si hubo intercambios en la pasada
     }
 
     @Override
@@ -243,17 +255,15 @@ public class CircularDoublyLinkedList<T> implements List<T>, Cloneable {
         if(isEmpty()){
             throw new ListException("Circular Doubly Linked List is empty");
         }
-        if(equals(head.data, element)){
-            return tail.data;
-        }
         Node<T> aux = head;
-        do{
-            if(equals(aux.next.data, element)){
-                return aux.data;
+        do {
+            if (equals(aux.data, element)) {
+                return aux.prev.data; // En una lista doblemente enlazada, el previo es directo
             }
             aux = aux.next;
-        } while(aux != head);
-        return null;
+        } while (aux != head);
+        // Si el bucle termina y el elemento no fue encontrado
+        throw new ListException("Element " + element + " not found in the list.");
     }
 
     @Override
@@ -264,24 +274,33 @@ public class CircularDoublyLinkedList<T> implements List<T>, Cloneable {
         Node<T> aux = head;
         do{
             if(equals(aux.data, element)){
-                return aux.next.data;
+                return aux.next.data; // En una lista doblemente enlazada, el siguiente es directo
             }
             aux = aux.next;
         } while(aux != head);
-        return null;
+        // Si el bucle termina y el elemento no fue encontrado
+        throw new ListException("Element " + element + " not found in the list.");
     }
 
     @Override
     public T get(int index) throws ListException {
+        if(isEmpty()){
+            throw new ListException("Circular Doubly Linked List is empty");
+        }
+        if (index <= 0 || index > size()) { // Validar que el índice esté dentro de los límites (1-based)
+            throw new ListException("Index out of bounds: " + index);
+        }
         Node<T> node = getNodeByIndex(index);
-        return node != null ? node.data : null;
+        return node.data; // getNodeByIndex ya asegura que el nodo existe para un índice válido
     }
 
     public Node<T> getNodeByIndex(int index) throws ListException {
         if(isEmpty()){
             throw new ListException("Circular Doubly Linked List is empty");
         }
-        if (index <= 0) return null;
+        if (index <= 0 || index > size()) { // Validar que el índice esté dentro de los límites (1-based)
+            throw new ListException("Index out of bounds: " + index);
+        }
         Node<T> aux = head;
         int i = 1;
         do{
@@ -289,21 +308,23 @@ public class CircularDoublyLinkedList<T> implements List<T>, Cloneable {
             i++;
             aux = aux.next;
         } while(aux != head);
-        return null;
+        return null; // No debería llegar aquí si el índice es válido
     }
 
     /** Representación texto para el log. */
     @Override
     public String toString() {
-        if (isEmpty()) return "HEAD ←→ HEAD";
+        if (isEmpty()) return "Circular Doubly Linked List is Empty"; // Mensaje más claro
         StringBuilder sb = new StringBuilder("HEAD ←→ ");
         Node<T> cur = head;
         do {
             sb.append("[").append(cur.data).append("]");
-            if (cur.next != null) sb.append(" ←→ ");
+            if (cur.next != head) { // Solo añade el separador si no es el último elemento antes de head
+                sb.append(" ←→ ");
+            }
             cur = cur.next;
         } while (cur != head);
-        sb.append(" ←→ HEAD");
+        sb.append(" ←→ HEAD"); // Indica la circularidad
         return sb.toString();
     }
 
