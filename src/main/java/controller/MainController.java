@@ -150,9 +150,7 @@ public class MainController {
         refreshQueue();
     }
 
-    // =========================================================================
-    // TAB 1 — CIRCULAR LINKED LIST
-    // =========================================================================
+
 
     @SuppressWarnings("unchecked")
     private void setupCircularTable() {
@@ -305,9 +303,7 @@ public class MainController {
     private int    parseCircularValue() { return Integer.parseInt(txfCircularValue.getText().trim()); }
     private void   circLog(String msg)  { txtAreaCircularLog.appendText(msg + "\n"); }
 
-    // =========================================================================
-    // TAB 2 — CIRCULAR DOUBLY LINKED LIST
-    // =========================================================================
+
 
     @SuppressWarnings("unchecked")
     private void setupDoublyTable() {
@@ -483,9 +479,7 @@ public class MainController {
 
     private void doublyLog(String msg) { txtAreaCircDoublyLog.appendText(msg + "\n"); }
 
-    // =========================================================================
-    // TAB 3 — LINKED STACK
-    // =========================================================================
+
 
     @SuppressWarnings("unchecked")
     private void setupStackTable() {
@@ -622,9 +616,7 @@ public class MainController {
 
     private void stackLog(String msg) { txtAreaStackLog.appendText(msg + "\n"); }
 
-    // =========================================================================
-    // TAB 4 — PRIORITY QUEUE
-    // =========================================================================
+
 
     @SuppressWarnings("unchecked")
     private void setupQueueTable() {
@@ -835,9 +827,7 @@ public class MainController {
 
     private void priorityLog(String msg) { txtAreaPriorityLog.appendText(msg + "\n"); }
 
-    // =========================================================================
-    // SHARED UTILITIES
-    // =========================================================================
+
 
     private void drawArrow(GraphicsContext gc, double x1, double y1, double x2, double y2) {
         gc.setStroke(Color.web("#4a90d9")); gc.setLineWidth(2); gc.strokeLine(x1, y1, x2, y2);
