@@ -8,4 +8,6 @@ public interface MyStack<T> {
     public T top() throws StackException; // devuelve el elemento del tope de la pila
     public void push(T element) throws StackException; // apila un elemento en el tope de la pila
     public T pop() throws StackException; //desapila el elemento del tope de la pila y lo retorna
+    public int indexOf(T element) throws StackException;
+    public void remove(T element) throws StackException;
 }

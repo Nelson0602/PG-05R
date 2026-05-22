@@ -11,4 +11,5 @@ public interface MyQueue<T> {
     public boolean contains(T element) throws QueueException; //true si el elemento fue encolado
     public T peek() throws QueueException; //devuelve el elemento que está en el frente/inicio de la Cola
     public T front() throws QueueException; //devuelve el elemento que está en el frente/inicio de la Cola
+    public void remove(T element) throws QueueException; // Elimina un elemento específico de la cola
 }

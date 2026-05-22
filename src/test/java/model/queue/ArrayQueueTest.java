@@ -1,37 +1,52 @@
 package model.queue;
 
-import model.stack.ArrayStack;
-import model.stack.StackException;
 import org.junit.jupiter.api.Test;
-
+import java.util.HashSet;
 import java.util.Random;
-
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Set;
 
 class ArrayQueueTest {
+
     @Test
-    void arrayQueueTest() {
-        ArrayQueue<Integer> queue = new ArrayQueue<>(30);
+    void arrayQueueRubricTest() {
+        ArrayQueue<Integer> queue = new ArrayQueue<>(50);
+        Random random = new Random();
+
         try {
-            for (int i = 0; i < 10; i++) {
-                int value = new Random().nextInt(50);
+            Set<Integer> uniqueNumbers = new HashSet<>();
+            while (uniqueNumbers.size() < 50) {
+                uniqueNumbers.add(random.nextInt(200));
+            }
 
-                System.out.println("enQueue(" + value + ")");
+            for (Integer value : uniqueNumbers) {
                 queue.enQueue(value);
-
             }
-            System.out.println("queue size: " + queue.size());
+
+            System.out.println("Contenido inicial de la cola:");
+            System.out.println(queue);
+
             System.out.println("Peek | Front: " + queue.peek());
-            System.out.println(queue);
-            for (int i = 0; i < 5; i++) {
-                System.out.println("deQueue(): " + queue.deQueue());
+            System.out.println("deQueue(): " + queue.deQueue());
 
+            System.out.println("\n--- Búsqueda de 20 valores ---");
+            for (int i = 0; i < 20; i++) {
+                int valueToSearch = random.nextInt(200);
+                int pos = queue.indexOf(valueToSearch);
+
+                if (pos != -1) {
+                    System.out.println("Valor " + valueToSearch + " ENCONTRADO en pos: " + pos);
+                    queue.remove(valueToSearch);
+                    System.out.println("Valor " + valueToSearch + " suprimido.");
+                } else {
+                    System.out.println("Valor " + valueToSearch + " NO encontrado.");
+                }
             }
+
+            System.out.println("\nContenido final de la cola:");
             System.out.println(queue);
+
         } catch (QueueException e) {
-            throw new RuntimeException(e);
-
-
+            System.err.println("Error en la cola: " + e.getMessage());
         }
     }
 }

@@ -2,6 +2,8 @@ package model.queue;
 
 // import model.stack.ArrayStack; // Eliminado: no se utiliza
 
+
+
 public class ArrayQueue<T> implements MyQueue<T> {
     private final int n; // La capacidad máxima de la cola (final)
     private T[] data; // Arreglo para almacenar los elementos
@@ -163,4 +165,25 @@ public class ArrayQueue<T> implements MyQueue<T> {
     private boolean equals(T a, T b) {
         return a == null ? b == null : a.equals(b);
     }
+
+
+@Override
+public void remove(T element) throws QueueException {
+    if (isEmpty()) throw new QueueException("Array Queue is empty");
+    ArrayQueue<T> auxQueue = new ArrayQueue<>(this.n);
+    boolean found = false;
+
+    while (!isEmpty()) {
+        T current = deQueue();
+        if (equals(current, element) && !found) {
+            found = true;
+        } else {
+            auxQueue.enQueue(current);
+        }
+    }
+    while (!auxQueue.isEmpty()) {
+        enQueue(auxQueue.deQueue());
+    }
+}
+
 }

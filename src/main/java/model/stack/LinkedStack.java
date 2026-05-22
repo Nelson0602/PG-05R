@@ -91,4 +91,50 @@ public class LinkedStack<T> implements MyStack<T> {
         sb.append(" → BOTTOM");
         return sb.toString();
     }
+
+    @Override
+    public int indexOf(T element) throws StackException {
+        if (isEmpty()) throw new StackException("Linked Stack is empty");
+        LinkedStack<T> auxStack = new LinkedStack<>();
+        int pos = -1;
+        int currentPos = 1;
+
+        while (!isEmpty()) {
+            T current = pop();
+            if (equals(current, element) && pos == -1) {
+                pos = currentPos;
+            }
+            auxStack.push(current);
+            currentPos++;
+        }
+
+        while (!auxStack.isEmpty()) {
+            push(auxStack.pop());
+        }
+        return pos;
+    }
+
+    @Override
+    public void remove(T element) throws StackException {
+        if (isEmpty()) throw new StackException("Linked Stack is empty");
+        LinkedStack<T> auxStack = new LinkedStack<>();
+        boolean found = false;
+
+        while (!isEmpty()) {
+            T current = pop();
+            if (equals(current, element) && !found) {
+                found = true;
+            } else {
+                auxStack.push(current);
+            }
+        }
+
+        while (!auxStack.isEmpty()) {
+            push(auxStack.pop());
+        }
+    }
+
+    private boolean equals(T a, T b) {
+        return a == null ? b == null : a.equals(b);
+    }
 }

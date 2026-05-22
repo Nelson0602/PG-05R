@@ -138,4 +138,23 @@ public class HeaderLinkedQueue<T> implements MyQueue<T> {
         return a == null ? b == null : a.equals(b);
     }
 
+    @Override
+    public void remove(T element) throws QueueException {
+        if (isEmpty()) throw new QueueException("Header Queue is empty");
+        HeaderLinkedQueue<T> auxQueue = new HeaderLinkedQueue<>();
+        boolean found = false;
+
+        while (!isEmpty()) {
+            T current = deQueue();
+            if (equals(current, element) && !found) {
+                found = true;
+            } else {
+                auxQueue.enQueue(current);
+            }
+        }
+        while (!auxQueue.isEmpty()) {
+            enQueue(auxQueue.deQueue());
+        }
+    }
+
 }

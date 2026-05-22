@@ -93,4 +93,50 @@ public class ArrayStack<T> implements MyStack<T> {
         sb.append(" → BOTTOM");
         return sb.toString();
     }
+
+    @Override
+    public int indexOf(T element) throws StackException {
+        if (isEmpty()) throw new StackException("Array Stack is empty");
+        ArrayStack<T> auxStack = new ArrayStack<>(this.n);
+        int pos = -1;
+        int currentPos = 1;
+
+        while (!isEmpty()) {
+            T current = pop();
+            if (equals(current, element) && pos == -1) {
+                pos = currentPos;
+            }
+            auxStack.push(current);
+            currentPos++;
+        }
+
+        while (!auxStack.isEmpty()) {
+            push(auxStack.pop());
+        }
+        return pos;
+    }
+
+    @Override
+    public void remove(T element) throws StackException {
+        if (isEmpty()) throw new StackException("Array Stack is empty");
+        ArrayStack<T> auxStack = new ArrayStack<>(this.n);
+        boolean found = false;
+
+        while (!isEmpty()) {
+            T current = pop();
+            if (equals(current, element) && !found) {
+                found = true; // Lo encontramos, no lo metemos en la auxiliar (lo eliminamos)
+            } else {
+                auxStack.push(current);
+            }
+        }
+
+        while (!auxStack.isEmpty()) {
+            push(auxStack.pop());
+        }
+    }
+
+    private boolean equals(T a, T b) {
+        return a == null ? b == null : a.equals(b);
+    }
 }

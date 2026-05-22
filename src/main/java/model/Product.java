@@ -1,11 +1,13 @@
 package model;
 
-public class Product {
+import java.time.LocalDate;
+
+public class Product implements Comparable<Product> {
     private String id;
     private String name;
     private Double price;
     private Integer stock;
-    private String type; // electrónicos, tecnológicos, línea blanca, comestible, médico, suministros
+    private String type;
     private LocalDate date;
 
     public Product(String id, String name, Double price, Integer stock, String type, String dateStr) {
@@ -38,6 +40,11 @@ public class Product {
 
     public LocalDate getDate() { return date; }
     public void setDate(LocalDate date) { this.date = date; }
+
+    @Override
+    public int compareTo(Product o) {
+        return Double.compare(this.price, o.price);
+    }
 
     @Override
     public String toString() {

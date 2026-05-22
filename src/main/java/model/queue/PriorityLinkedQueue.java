@@ -139,4 +139,28 @@ public class PriorityLinkedQueue<T> implements MyQueue<T> {
     private boolean equals(T a, T b) {
         return a == null ? b == null : a.equals(b);
     }
+
+    @Override
+    public void remove(T element) throws QueueException {
+        if (isEmpty()) throw new QueueException("Priority Queue is empty");
+
+        if (equals(front.data, element)) {
+            deQueue();
+            return;
+        }
+
+        Node<T> current = front;
+        while (current.next != null) {
+            if (equals(current.next.data, element)) {
+                current.next = current.next.next;
+                if (current.next == null) {
+                    rear = current;
+                }
+                size--;
+                return; // Elemento eliminado
+            }
+            current = current.next;
+        }
+    }
+
 }
