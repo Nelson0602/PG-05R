@@ -27,7 +27,7 @@ public class CircularDoublyLinkedListTest {
             System.out.println("--- TODOS LOS PRODUCTOS ---");
             System.out.println(list);
 
-            ArrayList<Object> javaList = new ArrayList<>();
+            ArrayList<Product> javaList = new ArrayList<>();
             for (int i = 1; i <= list.size(); i++) {
                 javaList.add((Product) list.get(i));
             }
