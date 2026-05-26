@@ -81,27 +81,55 @@ public class BTree<T extends Comparable<T>> implements Tree<T> {
 
     @Override
     public void remove(T element) throws TreeException {
-        // No implementado en esta version
+        if (isEmpty()) throw new TreeException("Binary Tree is empty");
+        root = remove(root, element);
+    }
+
+    private BTreeNode<T> remove(BTreeNode<T> node, T element) {
+        if (node != null) {
+            if(equals(node.data, element)){
+                //Caso 1. Es un nodo sin hijos
+                if(node.left == null && node.right == null)return null;
+                else { //caso 2. El nodo solo tiene un hijo, en este caso se remplaza por todo el subarbol
+                    if(node.left != null && node.right == null) {
+                        node.left = newPath(node.left, node.path);
+                        return node.left; //Sube todo e arbol izq
+                        } else if(node.left == null && node.right != null) {
+                        node.right = newPath(node.right, node.path);
+                        return node.right; //Sube todo e arbol der
+                    } else{//caso 3. El  nodo tiene 2 hijos
+                        T minValue = min(node.right);
+                        node.data = minValue;
+                        node.right = remove(node.right, minValue);
+
+                    }
+                    }
+
+            }
+        }
+        return node;
+
     }
 
     @Override
     public int height(T element) throws TreeException {
         if (isEmpty()) throw new TreeException("Binary Tree is empty");
         BTreeNode<T> node = findNode(root, element);
-        if (node == null) throw new TreeException("Element not found in Binary Tree");
-        return height(node);
+        return height(root, element, 0);
     }
 
-    @Override
-    public int height() throws TreeException {
-        if (isEmpty()) throw new TreeException("Binary Tree is empty");
-        return height(root);
+
+    private int height(BTreeNode<T> node, T element, int count) {
+        if (node == null) return 0;
+        else if(equals(node.data, element)) return count;
+        else return Math.max(height(node.left, element, ++count), height(node.right, element, count));
     }
 
     // Altura en nodos (hoja = 1)
-    private int height(BTreeNode<T> node) {
-        if (node == null) return 0;
-        return 1 + Math.max(height(node.left), height(node.right));
+    public int height() throws TreeException {
+        if (isEmpty()) throw new TreeException("Binary Tree is empty");
+        return height(root);
+
     }
 
     private BTreeNode<T> findNode(BTreeNode<T> node, T element) {
