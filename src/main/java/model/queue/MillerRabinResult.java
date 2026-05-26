@@ -1,4 +1,4 @@
-package model;
+package model.queue;
 
 import javafx.beans.property.SimpleStringProperty;
 

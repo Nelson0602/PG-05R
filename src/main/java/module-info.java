@@ -12,4 +12,6 @@ module org.example.pg03r {
     exports util;
     exports model.LinkedList;
     opens model.LinkedList to javafx.fxml;
+    exports model.queue;
+    opens model.queue to javafx.fxml;
 }

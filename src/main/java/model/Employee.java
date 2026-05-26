@@ -1,6 +1,4 @@
-package model.LinkedList;
-
-import model.Person;
+package model;
 
 public class Employee extends Person {
 
