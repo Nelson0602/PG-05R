@@ -105,10 +105,24 @@ public class BTree<T extends Comparable<T>> implements Tree<T> {
                     }
                     }
 
+            }else{
+                node.left = remove(node.left, element);
+                node.right = remove(node.right, element);
+
             }
         }
         return node;
 
+    }
+
+    private BTreeNode<T> newPath(BTreeNode<T> node, String path){
+        if(node!=null){
+            node.path = path;
+            newPath(node.left, path"/left");
+            newPath(node.right, path"/right");
+
+        }
+        return node;
     }
 
     @Override

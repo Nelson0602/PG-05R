@@ -53,4 +53,22 @@ class BTreeTest {
         }
     }
 
+    @Test
+    void testRemove(){
+        BTree<Integer> bTree = new BTree<>();
+        for (int i = 0; i< 10; i++) {
+            int value = new Random().nextInt(1, 30);
+            bTree.add(value);
+        }
+        System.out.println(bTree);
+        for (int i = 0; i< 15; i++) {
+            int value = new Random().nextInt(1, 30);
+            if(bTree.contains(value)){
+                bTree.remove(value);
+                System.out.println("Removed value: " + value);
+            }
+        }
+    } catch (TreeException e) {
+        throw new RuntimeException(e);
+    }
 }
