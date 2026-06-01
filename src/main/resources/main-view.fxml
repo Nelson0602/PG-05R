@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.canvas.Canvas?>
+
+<TabPane fx:id="mainTabPane" prefHeight="700.0" prefWidth="1200.0" tabClosingPolicy="UNAVAILABLE"
+         style="-fx-background-color: #0b131f;"
+         xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+         fx:controller="controller.MainController">
+    <tabs>
+        <Tab text="Binary Tree">
+            <content>
+                <SplitPane dividerPositions="0.35" style="-fx-background-color: #0b131f; -fx-padding: 0;">
+                    <items>
+                        <ScrollPane fitToWidth="true" style="-fx-background-color: #101c2c; -fx-background-insets: 0;">
+                            <content>
+                                <VBox spacing="15" style="-fx-padding: 20; -fx-background-color: #101c2c;">
+                                    <Label text="Árbol Binario Simple" style="-fx-text-fill: #3498db; -fx-font-size: 18px; -fx-font-weight: bold;" />
+                                    <Label text="Inserción por niveles (BFS)" style="-fx-text-fill: #7f8c8d; -fx-font-size: 11px; -fx-font-style: italic;" />
+                                    <Separator style="-fx-opacity: 0.2;"/>
+
+                                    <Label text="Valor (entero):" style="-fx-text-fill: #ffffff;" />
+                                    <TextField fx:id="btInputTextField" promptText="Ej: 42" style="-fx-background-color: #1a2a3a; -fx-text-fill: white; -fx-prompt-text-fill: #555;" />
+
+                                    <Button fx:id="btAddButton" text="+ Insertar" onAction="#handleAddBTree" maxWidth="Infinity" style="-fx-background-color: #00a8ff; -fx-text-fill: white; -fx-font-weight: bold;" />
+                                    <Button fx:id="btRemoveButton" text="✕ Eliminar" onAction="#handleRemoveBTree" maxWidth="Infinity" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold;" />
+                                    <Button fx:id="btClearButton" text="🗑 Limpiar árbol" onAction="#handleClearBTree" maxWidth="Infinity" style="-fx-background-color: #2c3e50; -fx-text-fill: #bdc3c7;" />
+
+                                    <Separator style="-fx-opacity: 0.2;"/>
+
+                                    <Label text="Recorrido:" style="-fx-text-fill: #ffffff;" />
+                                    <HBox spacing="10">
+                                        <ComboBox fx:id="btTraversalComboBox" promptText="InOrder" HBox.hgrow="ALWAYS" maxWidth="Infinity" style="-fx-background-color: #00a8ff;" />
+                                        <Button fx:id="btPlayButton" text="▶" onAction="#handlePlayBTreeTraversal" style="-fx-background-color: #2ecc71; -fx-text-fill: white;" />
+                                    </HBox>
+
+                                    <ListView fx:id="btListView" prefHeight="100" style="-fx-background-color: #1a2a3a; -fx-text-fill: #2ecc71; -fx-font-family: 'Courier New';" />
+
+                                    <HBox spacing="10">
+                                        <Label fx:id="btNodesLabel" text="Nodos: 0" style="-fx-text-fill: #bdc3c7;" />
+                                        <Label text="|" style="-fx-text-fill: #555;" />
+                                        <Label fx:id="btHeightLabel" text="Altura: 0" style="-fx-text-fill: #bdc3c7;" />
+                                    </HBox>
+
+                                    <Separator style="-fx-opacity: 0.2;"/>
+                                    <Label text="Leyenda de colores:" style="-fx-text-fill: #ffffff; -fx-font-weight: bold;" />
+                                </VBox>
+                            </content>
+                        </ScrollPane>
+
+                        <AnchorPane style="-fx-background-color: #0b131f;">
+                            <children>
+                                <Canvas fx:id="btCanvas" width="800" height="650" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                            </children>
+                        </AnchorPane>
+                    </items>
+                </SplitPane>
+            </content>
+        </Tab>
+
+        <Tab text="BST">
+            <content>
+                <SplitPane dividerPositions="0.35" style="-fx-background-color: #0b131f; -fx-padding: 0;">
+                    <items>
+                        <ScrollPane fitToWidth="true" style="-fx-background-color: #101c2c; -fx-background-insets: 0;">
+                            <content>
+                                <VBox spacing="15" style="-fx-padding: 20; -fx-background-color: #101c2c;">
+                                    <Label text="Árbol Binario de Búsqueda" style="-fx-text-fill: #f1c40f; -fx-font-size: 18px; -fx-font-weight: bold;" />
+                                    <Label text="Izq &lt; Nodo &lt; Der — O(log n) promedio" style="-fx-text-fill: #7f8c8d; -fx-font-size: 11px; -fx-font-style: italic;" />
+                                    <Separator style="-fx-opacity: 0.2;"/>
+
+                                    <Label text="Valor (entero):" style="-fx-text-fill: #ffffff;" />
+                                    <TextField fx:id="bstInputTextField" promptText="Ej: 45" style="-fx-background-color: #1a2a3a; -fx-text-fill: white; -fx-prompt-text-fill: #555;" />
+
+                                    <Button fx:id="bstAddButton" text="+ Insertar" onAction="#handleAddBST" maxWidth="Infinity" style="-fx-background-color: #00a8ff; -fx-text-fill: white; -fx-font-weight: bold;" />
+                                    <Button fx:id="bstSearchButton" text="🔍 Buscar (animar camino)" onAction="#handleSearchBST" maxWidth="Infinity" style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-font-weight: bold;" />
+                                    <Button fx:id="bstRemoveButton" text="✕ Eliminar" onAction="#handleRemoveBST" maxWidth="Infinity" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold;" />
+                                    <Button fx:id="bstClearButton" text="🗑 Limpiar árbol" onAction="#handleClearBST" maxWidth="Infinity" style="-fx-background-color: #2c3e50; -fx-text-fill: #bdc3c7;" />
+
+                                    <Separator style="-fx-opacity: 0.2;"/>
+
+                                    <Label text="Recorrido:" style="-fx-text-fill: #ffffff;" />
+                                    <HBox spacing="10">
+                                        <ComboBox fx:id="bstTraversalComboBox" promptText="InOrder" HBox.hgrow="ALWAYS" maxWidth="Infinity" style="-fx-background-color: #00a8ff;" />
+                                        <Button fx:id="bstPlayButton" text="▶" onAction="#handlePlayBSTTraversal" style="-fx-background-color: #2ecc71; -fx-text-fill: white;" />
+                                    </HBox>
+
+                                    <ListView fx:id="bstListView" prefHeight="100" style="-fx-background-color: #1a2a3a; -fx-text-fill: #2ecc71; -fx-font-family: 'Courier New';" />
+
+                                    <HBox spacing="10">
+                                        <Label fx:id="bstNodesLabel" text="Nodos: 0" style="-fx-text-fill: #bdc3c7;" />
+                                        <Label text="|" style="-fx-text-fill: #555;" />
+                                        <Label fx:id="bstHeightLabel" text="Altura: 0" style="-fx-text-fill: #bdc3c7;" />
+                                        <Label text="|" style="-fx-text-fill: #555;" />
+                                        <Label fx:id="bstValidLabel" text="BST Válido..." style="-fx-text-fill: #2ecc71;" />
+                                    </HBox>
+                                </VBox>
+                            </content>
+                        </ScrollPane>
+
+                        <AnchorPane style="-fx-background-color: #0b131f;">
+                            <children>
+                                <Canvas fx:id="bstCanvas" width="800" height="650" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                            </children>
+                        </AnchorPane>
+                    </items>
+                </SplitPane>
+            </content>
+        </Tab>
+
+        <Tab text="AVL">
+            <content>
+                <SplitPane dividerPositions="0.35" style="-fx-background-color: #0b131f; -fx-padding: 0;">
+                    <items>
+                        <ScrollPane fitToWidth="true" style="-fx-background-color: #101c2c; -fx-background-insets: 0;">
+                            <content>
+                                <VBox spacing="15" style="-fx-padding: 20; -fx-background-color: #101c2c;">
+                                    <Label text="Árbol AVL" style="-fx-text-fill: #2ecc71; -fx-font-size: 18px; -fx-font-weight: bold;" />
+                                    <Label text="BST auto-balanceado — O(log n) garantizado" style="-fx-text-fill: #7f8c8d; -fx-font-size: 11px; -fx-font-style: italic;" />
+                                    <Separator style="-fx-opacity: 0.2;"/>
+
+                                    <Label text="Valor (entero):" style="-fx-text-fill: #ffffff;" />
+                                    <TextField fx:id="avlInputTextField" promptText="Ej: 35" style="-fx-background-color: #1a2a3a; -fx-text-fill: white; -fx-prompt-text-fill: #555;" />
+
+                                    <Button fx:id="avlAddButton" text="+ Insertar" onAction="#handleAddAVL" maxWidth="Infinity" style="-fx-background-color: #00a8ff; -fx-text-fill: white; -fx-font-weight: bold;" />
+                                    <Button fx:id="avlSearchButton" text="🔍 Buscar" onAction="#handleSearchAVL" maxWidth="Infinity" style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-font-weight: bold;" />
+                                    <Button fx:id="avlRemoveButton" text="✕ Eliminar" onAction="#handleRemoveAVL" maxWidth="Infinity" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold;" />
+                                    <Button fx:id="avlClearButton" text="🗑 Limpiar árbol" onAction="#handleClearAVL" maxWidth="Infinity" style="-fx-background-color: #2c3e50; -fx-text-fill: #bdc3c7;" />
+
+                                    <Separator style="-fx-opacity: 0.2;"/>
+
+                                    <Label text="Última rotación aplicada:" style="-fx-text-fill: #ffffff;" />
+                                    <Label fx:id="avlLastRotationLabel" text="--" style="-fx-background-color: #1a2a3a; -fx-text-fill: #f1c40f; -fx-padding: 5; -fx-alignment: center;" maxWidth="Infinity"/>
+
+                                    <Separator style="-fx-opacity: 0.2;"/>
+
+                                    <Label text="Recorrido:" style="-fx-text-fill: #ffffff;" />
+                                    <HBox spacing="10">
+                                        <ComboBox fx:id="avlTraversalComboBox" promptText="InOrder" HBox.hgrow="ALWAYS" maxWidth="Infinity" style="-fx-background-color: #00a8ff;" />
+                                        <Button fx:id="avlPlayButton" text="▶" onAction="#handlePlayAVLTraversal" style="-fx-background-color: #2ecc71; -fx-text-fill: white;" />
+                                    </HBox>
+
+                                    <ListView fx:id="avlListView" prefHeight="100" style="-fx-background-color: #1a2a3a; -fx-text-fill: #2ecc71; -fx-font-family: 'Courier New';" />
+
+                                    <HBox spacing="10">
+                                        <Label fx:id="avlNodesLabel" text="Nodos: 0" style="-fx-text-fill: #bdc3c7;" />
+                                        <Label text="|" style="-fx-text-fill: #555;" />
+                                        <Label fx:id="avlHeightLabel" text="Altura: 0" style="-fx-text-fill: #bdc3c7;" />
+                                        <Label text="|" style="-fx-text-fill: #555;" />
+                                        <Label fx:id="avlBalancedLabel" text="Balanceado..." style="-fx-text-fill: #2ecc71;" />
+                                    </HBox>
+                                </VBox>
+                            </content>
+                        </ScrollPane>
+
+                        <AnchorPane style="-fx-background-color: #0b131f;">
+                            <children>
+                                <Canvas fx:id="avlCanvas" width="800" height="650" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                            </children>
+                        </AnchorPane>
+                    </items>
+                </SplitPane>
+            </content>
+        </Tab>
+    </tabs>
+</TabPane>

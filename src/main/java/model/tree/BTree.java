@@ -3,7 +3,7 @@ package model.tree;
 import java.util.Random;
 
 public class BTree<T extends Comparable<T>> implements Tree<T> {
-    private BTreeNode<T> root; // representa la unica entrada al arbol
+    public BTreeNode<T> root; // representa la única entrada al árbol
 
     // Constructor
     public BTree() {
@@ -16,9 +16,9 @@ public class BTree<T extends Comparable<T>> implements Tree<T> {
         return size(root);
     }
 
-    private int size(BTreeNode<T> nodo) {
-        if (nodo == null) return 0;
-        return size(nodo.left) + size(nodo.right) + 1;
+    private int size(BTreeNode<T> node) {
+        if (node == null) return 0;
+        return size(node.left) + size(node.right) + 1;
     }
 
     @Override
@@ -39,13 +39,12 @@ public class BTree<T extends Comparable<T>> implements Tree<T> {
 
     private boolean binarySearch(BTreeNode<T> node, T element) {
         if (node == null) return false;
-        else if (equals(node.data, element)) return true;
-        else return binarySearch(node.left, element) || binarySearch(node.right, element);
+        if (equals(node.data, element)) return true;
+        return binarySearch(node.left, element) || binarySearch(node.right, element);
     }
 
     @Override
     public void add(T element) {
-        // this.root = add(root, element);
         this.root = add(root, element, "root");
     }
 
@@ -53,9 +52,8 @@ public class BTree<T extends Comparable<T>> implements Tree<T> {
         if (node == null) {
             node = new BTreeNode<>(element);
         } else {
-            // Criterio aleatorio para insertar elementos
             int value = new Random().nextInt(10);
-            if (value % 2 == 0) { // si el valor es par inserte por la izq
+            if (value % 2 == 0) {
                 node.left = add(node.left, element);
             } else {
                 node.right = add(node.right, element);
@@ -68,9 +66,8 @@ public class BTree<T extends Comparable<T>> implements Tree<T> {
         if (node == null) {
             node = new BTreeNode<>(element, path);
         } else {
-            // Criterio aleatorio para insertar elementos
             int value = new Random().nextInt(10);
-            if (value % 2 == 0) { // si el valor es par inserte por la izq
+            if (value % 2 == 0) {
                 node.left = add(node.left, element, path + "/left");
             } else {
                 node.right = add(node.right, element, path + "/right");
@@ -79,71 +76,77 @@ public class BTree<T extends Comparable<T>> implements Tree<T> {
         return node;
     }
 
+    /**
+     * Elimina un elemento del árbol. Como el árbol no es BST, se busca
+     * en ambos subárboles. Si el nodo a eliminar tiene dos hijos, se
+     * reemplaza su dato por el sucesor (mínimo del subárbol derecho) y
+     * se elimina ese sucesor.
+     */
     @Override
     public void remove(T element) throws TreeException {
         if (isEmpty()) throw new TreeException("Binary Tree is empty");
-        root = remove(root, element);
+        boolean[] removed = new boolean[1];
+        root = remove(root, element, removed);
+        if (!removed[0]) throw new TreeException("Element not found in Binary Tree");
     }
 
-    private BTreeNode<T> remove(BTreeNode<T> node, T element) {
-        if (node != null) {
-            if(equals(node.data, element)){
-                //Caso 1. Es un nodo sin hijos
-                if(node.left == null && node.right == null)return null;
-                else { //caso 2. El nodo solo tiene un hijo, en este caso se remplaza por todo el subarbol
-                    if(node.left != null && node.right == null) {
-                        node.left = newPath(node.left, node.path);
-                        return node.left; //Sube todo e arbol izq
-                        } else if(node.left == null && node.right != null) {
-                        node.right = newPath(node.right, node.path);
-                        return node.right; //Sube todo e arbol der
-                    } else{//caso 3. El  nodo tiene 2 hijos
-                        T minValue = min(node.right);
-                        node.data = minValue;
-                        node.right = remove(node.right, minValue);
+    /**
+     * Helper recursivo para remove. El array booleano removed actúa como
+     * "paso por referencia" para indicar si se eliminó un nodo.
+     */
+    private BTreeNode<T> remove(BTreeNode<T> node, T element, boolean[] removed) {
+        if (node == null) return null;
 
-                    }
-                    }
-
-            }else{
-                node.left = remove(node.left, element);
-                node.right = remove(node.right, element);
-
+        if (equals(node.data, element)) {
+            // Nodo encontrado: manejar casos
+            removed[0] = true;
+            // Caso 1: hoja
+            if (node.left == null && node.right == null) {
+                return null;
             }
+            // Caso 2: un solo hijo
+            if (node.left == null) {
+                return node.right;
+            }
+            if (node.right == null) {
+                return node.left;
+            }
+            // Caso 3: dos hijos -> usar sucesor (mínimo del subárbol derecho)
+            T successor = min(node.right);
+            // reemplazar dato por sucesor
+            node.data = successor;
+            // eliminar el nodo que tenía el sucesor (no queremos marcar removed dos veces)
+            boolean[] dummy = new boolean[1];
+            node.right = remove(node.right, successor, dummy);
+            return node;
+        } else {
+            // buscar en izquierda; si se elimina, actualizamos y retornamos
+            node.left = remove(node.left, element, removed);
+            if (removed[0]) return node;
+            // sino, buscar en derecha
+            node.right = remove(node.right, element, removed);
+            return node;
         }
-        return node;
-
-    }
-
-    private BTreeNode<T> newPath(BTreeNode<T> node, String path){
-        if(node!=null){
-            node.path = path;
-            newPath(node.left, path"/left");
-            newPath(node.right, path"/right");
-
-        }
-        return node;
     }
 
     @Override
     public int height(T element) throws TreeException {
         if (isEmpty()) throw new TreeException("Binary Tree is empty");
-        BTreeNode<T> node = findNode(root, element);
-        return height(root, element, 0);
+        BTreeNode<T> target = findNode(root, element);
+        if (target == null) throw new TreeException("Element not found in Binary Tree");
+        return height(target);
     }
 
-
-    private int height(BTreeNode<T> node, T element, int count) {
-        if (node == null) return 0;
-        else if(equals(node.data, element)) return count;
-        else return Math.max(height(node.left, element, ++count), height(node.right, element, count));
-    }
-
-    // Altura en nodos (hoja = 1)
+    @Override
     public int height() throws TreeException {
         if (isEmpty()) throw new TreeException("Binary Tree is empty");
         return height(root);
+    }
 
+    // Altura en nodos (hoja = 1)
+    private int height(BTreeNode<T> node) {
+        if (node == null) return 0;
+        return 1 + Math.max(height(node.left), height(node.right));
     }
 
     private BTreeNode<T> findNode(BTreeNode<T> node, T element) {
@@ -160,12 +163,13 @@ public class BTree<T extends Comparable<T>> implements Tree<T> {
         return min(root);
     }
 
-    private T min(BTreeNode<T> node) {
-        if (node.left != null && node.right != null) { // caso 1 nodo con dos hijos
+    T min(BTreeNode<T> node) {
+        if (node == null) return null;
+        if (node.left != null && node.right != null) {
             return minElement(node.data, minElement(min(node.left), min(node.right)));
-        } else if (node.left != null) { // caso 2 cuando el nodo solo tiene un hijo
+        } else if (node.left != null) {
             return minElement(node.data, min(node.left));
-        } else if (node.right != null) { // caso 3 cuando el nodo solo tiene un hijo
+        } else if (node.right != null) {
             return minElement(node.data, min(node.right));
         } else {
             return node.data;
@@ -174,7 +178,7 @@ public class BTree<T extends Comparable<T>> implements Tree<T> {
 
     private T minElement(T a, T b) {
         if (a == null) return b;
-        else if (b == null) return a;
+        if (b == null) return a;
         return compareElements(a, b) <= 0 ? a : b;
     }
 
@@ -185,11 +189,12 @@ public class BTree<T extends Comparable<T>> implements Tree<T> {
     }
 
     private T max(BTreeNode<T> node) {
-        if (node.left != null && node.right != null) { // caso 1 nodo con dos hijos
+        if (node == null) return null;
+        if (node.left != null && node.right != null) {
             return maxElement(node.data, maxElement(max(node.left), max(node.right)));
-        } else if (node.left != null) { // caso 2 cuando el nodo solo tiene un hijo
+        } else if (node.left != null) {
             return maxElement(node.data, max(node.left));
-        } else if (node.right != null) { // caso 3 cuando el nodo solo tiene un hijo
+        } else if (node.right != null) {
             return maxElement(node.data, max(node.right));
         } else {
             return node.data;
@@ -198,7 +203,7 @@ public class BTree<T extends Comparable<T>> implements Tree<T> {
 
     private T maxElement(T a, T b) {
         if (a == null) return b;
-        else if (b == null) return a;
+        if (b == null) return a;
         return compareElements(a, b) >= 0 ? a : b;
     }
 
@@ -229,9 +234,8 @@ public class BTree<T extends Comparable<T>> implements Tree<T> {
     private String inOrder(BTreeNode<T> node) {
         String result = "";
         if (node != null) {
-            result = inOrder(node.left);
+            result += inOrder(node.left);
             result += node.data + ", ";
-            // result += node.data+"("+node.path+") ";
             result += inOrder(node.right);
         }
         return result;
@@ -247,9 +251,8 @@ public class BTree<T extends Comparable<T>> implements Tree<T> {
     private String postOrder(BTreeNode<T> node) {
         String result = "";
         if (node != null) {
-            result = postOrder(node.left);
+            result += postOrder(node.left);
             result += postOrder(node.right);
-            // result += node.data+"("+node.path+") ";
             result += node.data + ", ";
         }
         return result;
@@ -259,15 +262,15 @@ public class BTree<T extends Comparable<T>> implements Tree<T> {
     public String nodeHeight() throws TreeException {
         if (isEmpty()) throw new TreeException("Binary Tree is empty");
         StringBuilder sb = new StringBuilder();
-        nodeHeight(root, sb);
+        buildNodeHeight(root, sb);
         return sb.toString();
     }
 
-    private void nodeHeight(BTreeNode<T> node, StringBuilder sb) {
+    private void buildNodeHeight(BTreeNode<T> node, StringBuilder sb) {
         if (node == null) return;
         sb.append(node.data).append(": ").append(height(node)).append("\n");
-        nodeHeight(node.left, sb);
-        nodeHeight(node.right, sb);
+        buildNodeHeight(node.left, sb);
+        buildNodeHeight(node.right, sb);
     }
 
     @Override
@@ -280,12 +283,12 @@ public class BTree<T extends Comparable<T>> implements Tree<T> {
         return result;
     }
 
-    private boolean equals(T a, T b) {
+    public boolean equals(T a, T b) {
         return a == null ? b == null : a.equals(b);
     }
 
-    // Metodo generico de comparacion
-    private int compareElements(T a, T b) {
+    // Método genérico de comparación
+    public int compareElements(T a, T b) {
         return a.compareTo(b);
     }
 }
